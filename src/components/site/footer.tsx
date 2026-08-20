@@ -5,6 +5,7 @@ import { useLang } from "@/lib/i18n";
 import { brand, socials, navLinks, healthDisclaimer, ascend, ctas } from "@/lib/content";
 import { Timecode, BrassRule } from "@/components/site/cinematic";
 import { Button } from "@/components/ui/button";
+import { SubscribeBand } from "@/components/site/subscribe-form";
 
 export function Footer() {
   const { lang, t, setLang } = useLang();
@@ -36,6 +37,11 @@ export function Footer() {
             </Button>
           </div>
         </div>
+      </div>
+
+      {/* Subscribe band */}
+      <div className="relative mx-auto max-w-7xl px-4 md:px-8 pt-12">
+        <SubscribeBand />
       </div>
 
       {/* Main footer grid */}

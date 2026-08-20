@@ -3,6 +3,9 @@
 import { Nav } from "@/components/site/nav";
 import { StickyCTA } from "@/components/site/sticky-cta";
 import { Footer } from "@/components/site/footer";
+import { ScrollProgress } from "@/components/site/scroll-progress";
+import { DirectorsNotes } from "@/components/site/directors-notes";
+import { ConsentBanner } from "@/components/site/consent-banner";
 import { ColdOpenHero } from "@/components/sections/cold-open-hero";
 import { RealProblem } from "@/components/sections/real-problem";
 import { AscendMethod } from "@/components/sections/ascend-method";
@@ -20,8 +23,10 @@ import { FinalAscent } from "@/components/sections/final-ascent";
 export default function Home() {
   return (
     <div className="site-shell bg-obsidian">
+      <ScrollProgress />
       <Nav />
       <StickyCTA />
+      <DirectorsNotes />
       <main className="site-main">
         {/* 1 — THE COLD OPEN */}
         <ColdOpenHero />
@@ -51,6 +56,7 @@ export default function Home() {
         <FinalAscent />
       </main>
       <Footer />
+      <ConsentBanner />
     </div>
   );
 }

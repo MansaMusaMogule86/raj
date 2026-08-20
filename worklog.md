@@ -141,3 +141,59 @@ Next-phase recommendations (for the webDevReview agent):
 - Lazy-mount muted hero video with poster fallback (currently static image only)
 - Add cookie/analytics consent banner if required by jurisdiction
 - Add Open Graph hero image (currently uses metadataBase)
+
+---
+Task ID: REVIEW-01 (first webDevReview cron run)
+Agent: webDevReview agent (cron job 331062)
+Task: QA pass + mandatory styling/feature enhancements
+
+## Current project status (assessment)
+- v1 complete & stable: 13-section bilingual cinematic site, EN LTR + AR RTL, real Raja content preserved, analytics/SEO wired, VLM-verified on desktop + mobile
+- QA this round: dev server 96-871ms responses, 0 console errors, 0 page errors, lint clean
+- No bugs/runtime errors found → proceeded to enhancement phase
+
+## Completed modifications this round
+
+### New features (mandatory: more features)
+1. **Scroll-linked chapter progress** (`src/components/site/scroll-progress.tsx`)
+   - Thin brass→ember gradient progress bar fixed at viewport top (z-70)
+   - Floating "chapter reel" pill (top corner, desktop) showing current chapter num + label, updates on scroll via section probe, RTL-aware (left side in AR)
+   - Hidden until past 60vh; respects reduced-motion
+2. **Cookie/analytics consent banner** (`src/components/site/consent-banner.tsx`)
+   - Non-blocking bottom banner, appears 3.2s after load (after hero cold-open)
+   - Accept / Decline → stored in localStorage `ascend-consent`
+   - Analytics layer now gated: declined events dropped, undecided events dispatched as custom events but not pushed to dataLayer, accepted events → dataLayer
+   - Updated `src/lib/analytics.ts` sink() to read consent before push
+3. **Director's Notes** (`src/lib/directors-notes.ts` + `src/components/site/directors-notes.tsx`)
+   - Film-language meta-commentary (creative-direction notes, NOT invented biography) for 9 sections
+   - Floating dismissible card (desktop, bottom corner), RTL-aware, updates with scroll position
+   - Bilingual notes matching the section's creative intent
+4. **Newsletter subscribe** (`src/app/api/subscribe/route.ts` + `src/components/site/subscribe-form.tsx`)
+   - POST /api/subscribe stores subscribers (in-memory, dedup by email), GET returns count
+   - SubscribeForm + SubscribeBand components, posts to API, fires email_capture analytics
+   - Integrated into footer as a prominent band above the main grid
+5. **Animated CountUp** (`src/components/site/count-up.tsx`)
+   - Counts 0→value when scrolled into view, easeOutCubic, respects reduced-motion
+   - Applied to verified real numbers ONLY (44 members, $29 price) in Ascend Community — never fake stats
+
+### Styling improvements (mandatory: more details)
+- Refined hover states via frame-marker + brass/30 border transitions across sections
+- Scroll progress bar + chapter reel pill add persistent cinematic film-reel texture
+- Director's note card adds behind-the-scenes documentary layer
+- Consent banner styled with brass/30 border + obsidian/95 backdrop matching brand
+
+## Verification results
+- Lint: 0 errors, 0 warnings
+- agent-browser: scroll progress bar present ✓, chapter indicator shows "Chapter 04 Raja's Story" ✓, director's note shows correct section note ("The community is the third act...") ✓, CountUp shows 44 ✓, consent accept → localStorage "accepted" ✓, subscribe POST → API count:1 + toast + success state ✓
+- Dev log: `[subscribe] new subscriber from footer_band — subscriber@example.com` + POST 200 ✓
+- VLM (mid-scroll): "scroll progress bar clearly visible anchors film reel aesthetic, chapter reel pill mimics film slate, director's note card reinforces documentary narrative, no overlap issues"
+
+## Unresolved issues / risks + next-phase recommendations
+- Director's note text is dense on small screens — currently desktop-only (lg:flex); could add a mobile expandable chip variant next round
+- Newsletter + contact APIs are in-memory; swap for real ESP (Resend/ConvertKit) before production launch
+- Consent banner has no "customize preferences" granular toggle — could add analytics/marketing split next round
+- Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries) — Raja must provide real values
+- Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
+- Lazy muted hero video with poster fallback not yet added (currently static image) — next round candidate
+- Could add keyboard chapter navigation (1-9 to jump) as further film-language touch
+- Could add share buttons on transformation stories + cut entries

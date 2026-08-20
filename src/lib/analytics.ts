@@ -28,9 +28,23 @@ declare global {
 
 function sink(ev: AscendEvent) {
   if (typeof window === "undefined") return;
-  window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push(ev);
-  if (process.env.NODE_ENV !== "production") {
+  // Gate on consent — if declined, drop events. If undecided, still
+  // dispatch the custom event (so the UI layer can react) but don't push
+  // to dataLayer until consent is accepted.
+  let consent: "accepted" | "declined" | null = null;
+  try {
+    const v = localStorage.getItem("ascend-consent");
+    if (v === "accepted" || v === "declined") consent = v;
+  } catch {
+    /* ignore */
+  }
+  if (consent === "declined") return;
+  if (consent === "accepted") {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(ev);
+  }
+  window.dispatchEvent(new CustomEvent("ascend:analytics", { detail: ev }));
+  if (process.env.NODE_ENV !== "production" && consent === "accepted") {
     console.debug("[ascend:analytics]", ev);
   }
 }

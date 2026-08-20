@@ -13,6 +13,7 @@ import { useLang } from "@/lib/i18n";
 import { ascend, faq, brand } from "@/lib/content";
 import { analytics } from "@/lib/analytics";
 import { ChapterHeader, BrassRule, Timecode } from "@/components/site/cinematic";
+import { CountUp } from "@/components/site/count-up";
 
 const TIMELINE = [
   { icon: Users, en: "You arrive", ar: "تصل", desc: { en: "You join the Skool community and get the welcome guide.", ar: "تنضم لمجتمع سكول وتستلم دليل الترحيب." } },
@@ -61,11 +62,13 @@ export function AscendCommunity() {
             >
               <Timecode className="text-bone/50">{ar ? "الآن" : "Now"}</Timecode>
               <div className="mt-4 flex items-end gap-2">
-                <span className="display text-bone text-5xl">{ascend.memberCount}</span>
+                <span className="display text-bone text-5xl">
+                  <CountUp value={ascend.memberCount} />
+                </span>
                 <span className="text-bone/60 text-sm mb-1">{ar ? "مشترك" : "members"}</span>
               </div>
               <div className="mt-4 flex items-baseline gap-2">
-                <span className="display text-brass text-3xl">${ascend.priceUsd}</span>
+                <span className="display text-brass text-3xl">$<CountUp value={ascend.priceUsd} /></span>
                 <span className="tc text-bone/60">/ {ar ? "شهر" : "month"}</span>
               </div>
               <p className="tc text-bone/40 mt-2">
