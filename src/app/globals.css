@@ -106,6 +106,7 @@
   }
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 6rem; /* keep anchor targets clear of the fixed nav */
   }
   body {
     @apply bg-background text-foreground;
@@ -171,7 +172,8 @@
   /* Timecode / metadata mono text */
   .tc {
     font-family: var(--font-mono), ui-monospace, monospace;
-    font-size: 0.7rem;
+    font-size: 0.72rem;
+    font-weight: 500;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--sand);
@@ -386,3 +388,76 @@ html, body { height: 100%; }
 /* RTL adjustments */
 [dir="rtl"] .ltr-only { display: none; }
 [dir="ltr"] .rtl-only { display: none; }
+
+/* ============================================================
+   Print stylesheet — clean chapter layout for offline reading.
+   Hides interactive/floating chrome; keeps section content, headings,
+   and the brand. Forces dark-on-light ink for legibility on paper.
+   ============================================================ */
+@media print {
+  .film-grain,
+  .nav,
+  .sticky-cta,
+  .scroll-progress,
+  .directors-notes,
+  .consent-banner,
+  .back-to-top,
+  .shortcuts-hint,
+  .section-progress,
+  .keyboard-nav,
+  .command-palette,
+  .section-divider,
+  footer [class*="SubscribeBand"],
+  button,
+  [aria-hidden="true"] {
+    display: none !important;
+  }
+  html, body {
+    background: #fff !important;
+    color: #1B1A18 !important;
+    font-size: 11pt;
+  }
+  .site-shell { min-height: auto !important; }
+  main { display: block !important; }
+  section {
+    page-break-inside: avoid;
+    padding: 1rem 0 !important;
+    background: #fff !important;
+    color: #1B1A18 !important;
+  }
+  /* Force legible text on dark-themed sections */
+  [class*="bg-obsidian"], [class*="bg-secondary"] {
+    background: #fff !important;
+    color: #1B1A18 !important;
+  }
+  .display, .display-ar, h1, h2, h3 {
+    color: #1B1A18 !important;
+  }
+  .text-bone, .text-bone\/85, .text-bone\/70, .text-bone\/90 {
+    color: #1B1A18 !important;
+  }
+  .text-brass, .text-ember, [class*="text-brass"] {
+    color: #8A6630 !important;
+  }
+  .tc { color: #6B6356 !important; }
+  /* Keep images, avoid breaking */
+  img, svg { break-inside: avoid; }
+  a { color: #8A6630 !important; text-decoration: underline; }
+  a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 8pt;
+    color: #6B6356;
+  }
+  /* Page header with brand */
+  body::before {
+    content: "RAJA IDRIES — ASCEND";
+    display: block;
+    font-family: var(--font-mono), monospace;
+    font-size: 8pt;
+    letter-spacing: 0.15em;
+    color: #6B6356;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.5rem;
+  }
+}

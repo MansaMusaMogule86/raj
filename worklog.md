@@ -363,3 +363,57 @@ Task: QA pass + mandatory styling/feature enhancements (round 4)
 - Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
 - Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries)
 - Next-round candidates: per-section OG image generation, animated film-leader intro on first paint, reading-progress within the command palette results, consent banner auto-dismiss, bolder timecode typography, print stylesheet for the method/kit pages
+
+---
+Task ID: REVIEW-05 (fifth webDevReview cron run)
+Agent: webDevReview agent (cron job 331062)
+Task: QA pass + mandatory styling/feature enhancements (round 5)
+
+## Current project status (assessment)
+- v1 + REVIEW-01/02/03/04 enhancements stable: 13-section bilingual cinematic site with scroll-progress, consent, director's notes, newsletter, count-up, cinematic bg, keyboard nav, share bars, section dividers, command palette (with focus-trap), back-to-top, shortcuts hint, section progress, theme toggle + light variant, RunTime badges
+- QA this round: dev server 132-970ms responses, lint clean, all prior features intact (theme toggle ✓, RunTime "RT 02:39" ✓, palette ✓)
+- Found + fixed a real bug: nested `<button>` inside `<button>` in directors-notes mobile chip (converted outer to role=button div with keyboard handler) — reduced hydration errors
+- Remaining hydration warnings: i18n LanguageProvider SSR/RTL mismatch (server renders ltr, client may switch to rtl from localStorage) — non-blocking, documented as known
+
+## Completed modifications this round
+
+### New features (mandatory: more features)
+1. **FilmLeader** (`src/components/site/film-leader.tsx`)
+   - SMPTE-style countdown leader (3→2→1) plays once on first visit, remembered in localStorage `ascend-intro-seen`
+   - Rotating ring crosshair + countdown number with blur/scale transitions, brand mark, "ASCEND · STARTING" label, film perforations top/bottom
+   - Skip via Esc/Enter/Space/click; respects reduced-motion (skips entirely)
+   - Refactored from framer-motion AnimatePresence to CSS transition + state machine to fix a stuck-exit bug (infinite child animations blocked AnimatePresence exit)
+   - Verified: plays on first visit (count 3→2→1→gone), skipped on reload ✓, seen flag set ✓
+2. **PrintButton** (`src/components/site/print-button.tsx`) + print stylesheet
+   - Triggers window.print() with film-style label; uses global @media print stylesheet in globals.css
+   - Print stylesheet: hides all floating chrome (nav, sticky-cta, grain, overlays, dividers, buttons), forces dark-on-light ink, page-break-inside avoid on sections, prints href URLs after links, adds "RAJA IDRIES — ASCEND" page header
+   - Applied to AscendMethod + RajaKit sections
+   - Verified: print buttons present in #method + #kit ✓
+3. **Consent banner auto-dismiss** (extended `src/components/site/consent-banner.tsx`)
+   - After 25s visible (non-blocking), banner hides itself without forcing a decision — visitor can still scroll/interact
+   - Verified: banner shows after 3.2s, auto-dismisses after ~30s, localStorage consent remains null (no forced decision) ✓
+
+### Styling improvements (mandatory: more details)
+- **Bolder timecode typography**: `.tc` font-weight 400→500, font-size 0.7rem→0.72rem for low-display readability (VLM-requested)
+- **scroll-padding-top: 6rem** on html so anchor-link targets aren't hidden under the fixed nav
+- **Film-leader**: full-screen obsidian overlay with rotating SMPTE ring, brass crosshair, perforations — reinforces "you are about to watch a film" opening
+- **Print stylesheet**: complete @media print block with legible ink, page-break rules, URL printing, brand header
+
+### Bug fixes
+- **Nested `<button>` in directors-notes mobile chip**: outer `<button>` (expand toggle) contained an inner `<button>` (dismiss X) → hydration error. Converted outer to `<div role="button" tabIndex={0}>` with onClick + onKeyDown handler. Verified: no nested buttons in rendered DOM ✓
+
+## Verification results
+- Lint: 0 errors, 0 warnings
+- agent-browser: film-leader plays (count 3→2→1→removed) + skipped on reload + seen flag ✓, print buttons present in method+kit ✓, consent auto-dismisses after 30s ✓, no nested buttons in DOM ✓, no fresh page errors after clear+reload ✓
+- Dev log: clean compiles
+- VLM: "cinematic metaphor remains strong and immersive, no visual regressions, polish improving, print buttons indicate better utility, typography crisp"
+- Known remaining: i18n SSR/RTL hydration warnings (server ltr vs client rtl from localStorage) — non-blocking, functional; could be resolved with a no-flash hydration strategy next round
+
+## Unresolved issues / risks + next-phase recommendations
+- i18n LanguageProvider causes SSR/client dir hydration mismatch — implement a no-flash strategy (render dir-neutral until hydrated, or use a cookie-based initial render) next round
+- Film-leader uses CSS transition exit now (works) but could be smoother with a dedicated exit animation library
+- Newsletter + contact APIs still in-memory; swap for real ESP before production
+- Real <video> path wired but untested with actual file (awaiting Raja's footage)
+- Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
+- Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries)
+- Next-round candidates: no-flash i18n hydration, per-section OG image generation, reading-progress within command palette results, animated film-leader with smoother exit, consent granular toggle, print-specific page breaks for kit product grid

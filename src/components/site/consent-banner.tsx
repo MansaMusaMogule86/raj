@@ -31,12 +31,20 @@ export function ConsentBanner() {
     return () => window.clearTimeout(id);
   }, []);
 
-  // Slight delay so it doesn't fight the hero cold-open animation
+  // Slight delay so it doesn't fight the hero cold-open animation; auto-dismiss
+  // after 25s if no decision (non-blocking — visitor can still scroll).
   const [show, setShow] = useState(false);
   useEffect(() => {
     if (ready && consent === null) {
       const id = setTimeout(() => setShow(true), 3200);
-      return () => clearTimeout(id);
+      const autoId = setTimeout(() => {
+        // Auto-dismiss after 25s visible — does NOT set consent, just hides
+        setShow(false);
+      }, 28200);
+      return () => {
+        clearTimeout(id);
+        clearTimeout(autoId);
+      };
     }
   }, [ready, consent]);
 

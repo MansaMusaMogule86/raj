@@ -12,6 +12,7 @@ import { BackToTop } from "@/components/site/back-to-top";
 import { CommandPalette } from "@/components/site/command-palette";
 import { ShortcutsHint } from "@/components/site/shortcuts-hint";
 import { SectionProgress } from "@/components/site/section-progress";
+import { FilmLeader } from "@/components/site/film-leader";
 import { ColdOpenHero } from "@/components/sections/cold-open-hero";
 import { RealProblem } from "@/components/sections/real-problem";
 import { AscendMethod } from "@/components/sections/ascend-method";
@@ -29,6 +30,7 @@ import { FinalAscent } from "@/components/sections/final-ascent";
 export default function Home() {
   return (
     <div className="site-shell bg-obsidian">
+      <FilmLeader />
       <ScrollProgress />
       <KeyboardNav />
       <CommandPalette />

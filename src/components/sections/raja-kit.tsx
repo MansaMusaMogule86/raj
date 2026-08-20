@@ -8,6 +8,7 @@ import { useLang } from "@/lib/i18n";
 import { kitItems, kitCategories, type KitItem } from "@/lib/content";
 import { analytics } from "@/lib/analytics";
 import { ChapterHeader, Timecode, FrameMarker, BrassRule } from "@/components/site/cinematic";
+import { PrintButton } from "@/components/site/print-button";
 
 export function RajaKit() {
   const { lang, t } = useLang();
@@ -163,6 +164,9 @@ export function RajaKit() {
             ? "العتاد طبقة داعمة، ليس الهدف. النظام الحقيقي يبدأ بإرتقِ — الأدوات تساعد على التطبيق، لا تعوّض عنه."
             : "The kit is a supporting layer, not the goal. The real system starts with Ascend — tools help you apply, not replace it."}
         </p>
+        <div className="mt-6 text-center">
+          <PrintButton />
+        </div>
       </div>
     </section>
   );

@@ -6,6 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { pillars } from "@/lib/content";
 import { ChapterHeader, BrassRule } from "@/components/site/cinematic";
+import { PrintButton } from "@/components/site/print-button";
 
 const PILLAR_IMAGES: Record<string, string> = {
   training: "/images/scene-training.png",
@@ -166,6 +167,9 @@ export function AscendMethod() {
           <a href="#ascend" className="mt-6 inline-flex items-center gap-2 tc text-brass hover:text-obsidian transition-colors">
             {ar ? "اكتشف إرتقِ" : "Explore Ascend"} →
           </a>
+          <div className="mt-6">
+            <PrintButton className="border-obsidian/20 text-obsidian/70 hover:text-obsidian hover:bg-obsidian/5" />
+          </div>
         </motion.div>
       </div>
     </section>

@@ -113,10 +113,13 @@ export function DirectorsNotes() {
           style={{ marginBottom: "env(safe-area-inset-bottom)" }}
           aria-label={ar ? "ملاحظات المخرج" : "Director's note"}
         >
-          {/* Collapsed chip header */}
-          <button
+          {/* Collapsed chip header — div with role+keyboard to avoid nested buttons */}
+          <div
+            role="button"
+            tabIndex={0}
             onClick={() => setMobileExpanded((v) => !v)}
-            className="w-full flex items-center justify-between gap-2 p-3 text-start"
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setMobileExpanded((v) => !v); } }}
+            className="w-full flex items-center justify-between gap-2 p-3 text-start cursor-pointer"
             aria-expanded={mobileExpanded}
           >
             <span className="flex items-center gap-2 min-w-0">
@@ -141,7 +144,7 @@ export function DirectorsNotes() {
                 <ChevronUp className="h-4 w-4 text-bone/60" />
               )}
             </span>
-          </button>
+          </div>
           <AnimatePresence>
             {mobileExpanded && (
               <motion.div
