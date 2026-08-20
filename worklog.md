@@ -310,3 +310,56 @@ Task: QA pass + mandatory styling/feature enhancements (round 3)
 - Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
 - Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries)
 - Next-round candidates: per-section OG image generation, theme toggle (warm light variant), reading-time estimate on long sections, focus-trap in command palette for full a11y, animated film-leader intro on first paint
+
+---
+Task ID: REVIEW-04 (fourth webDevReview cron run)
+Agent: webDevReview agent (cron job 331062)
+Task: QA pass + mandatory styling/feature enhancements (round 4)
+
+## Current project status (assessment)
+- v1 + REVIEW-01/02/03 enhancements stable: 13-section bilingual cinematic site with scroll-progress, consent, director's notes, newsletter, count-up, cinematic bg, keyboard nav, share bars, section dividers, command palette, back-to-top, shortcuts hint, section progress, micro-interactions
+- QA this round: dev server 142-934ms responses, 0 console errors, 0 page errors, lint clean, all prior features intact (palette opens ✓, back-to-top present ✓, subscribe count:1 ✓)
+- No bugs found → proceeded to enhancement phase
+
+## Completed modifications this round
+
+### New features (mandatory: more features)
+1. **Command palette focus-trap** (extended `src/components/site/command-palette.tsx`)
+   - Full a11y: focus saved on open, moved to search input, Tab/Shift+Tab cycles within panel, focus restored to trigger on close
+   - Added panelRef + inputRef + lastFocused tracking
+   - Removed autoFocus (now managed by effect), aria-modal + labelled
+   - Verified: input focused on open ✓, Tab cycles through results ✓, Esc closes ✓
+2. **RunTime** (`src/components/site/run-time.tsx`)
+   - Film-style "run time" badge (RT mm:ss) estimating reading time per section (word count / 200 wpm)
+   - Deferred measurement after paint, cached, hidden for short sections (<40 words)
+   - Bilingual label (RT / مدة), brass-toned with clock icon
+   - Applied to AscendCommunity stat card + OneToOneConsultation header
+   - Verified: "RT 02:39" on #ascend, "RT 01:05" on #coaching ✓
+3. **ThemeToggle** (`src/components/site/theme-toggle.tsx`) + warm light variant
+   - Sun/Moon toggle in nav switches between cinematic dark (default) and warm bone/sand light
+   - Remembered in localStorage `ascend-theme`, reflected via [data-theme="light"] on <html>
+   - Light variant tokens added to globals.css: warm bone bg (#F1EEE6), darker brass primary, adjusted borders/vignette/grain
+   - Verified: toggle → data-theme="light" + localStorage stored ✓, toggle back to dark ✓
+
+### Styling improvements (mandatory: more details)
+- **SectionProgress refinement**: thicker (3px), taller (h-48), rounded-full track, brass→ember gradient fill with glow shadow + ember head dot with glow — much more prominent and on-brand
+- **Warm light variant** in globals.css: complete token set (bg, fg, card, primary, secondary, muted, accent, border, ring) + film-grain/vignette adjustments for light context
+- Theme toggle styled as ghost icon button matching nav cluster
+
+## Verification results
+- Lint: 0 errors, 0 warnings
+- agent-browser: theme toggle present ✓, toggle to light → data-theme="light" + localStorage ✓, toggle back to dark ✓, command palette opens + input focused ✓, Tab cycles results ✓, Esc closes ✓, RunTime "RT 02:39" on ascend ✓, RunTime "RT 01:05" on coaching ✓, section-progress refined element present ✓, mobile renders ✓
+- Dev log: clean compiles, no runtime errors
+- VLM (dark mid-scroll): "highly thematic — RT badges + Chapter headers extend cinematic film metaphor; Sun/Moon toggle fits Director's Cut aesthetic; light variant warm/premium like aged parchment, avoids flat white; focus-traps + refined progress hairline significantly elevate perceived quality"
+- VLM (light variant): "warm and premium, brand palette holds exceptionally well, golden-brass primary cohesive, no critical contrast issues"
+- VLM noted: cookie-consent banner visually overlaps content card in one view (expected — banner is fixed above content by design, not blocking interaction); thin timecode metadata could be slightly bolder
+
+## Unresolved issues / risks + next-phase recommendations
+- VLM noted cookie-consent banner visual overlap with content in some views — by design (fixed bottom), but could add a body scroll-padding or auto-dismiss-after-timeout next round
+- Thin timecode (tc) text could be slightly bolder for low-display readability
+- Command palette trigger still uses synthetic KeyboardEvent dispatch — could expose direct open() via context
+- Newsletter + contact APIs still in-memory; swap for real ESP before production
+- Real <video> path wired but untested with actual file (awaiting Raja's footage)
+- Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
+- Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries)
+- Next-round candidates: per-section OG image generation, animated film-leader intro on first paint, reading-progress within the command palette results, consent banner auto-dismiss, bolder timecode typography, print stylesheet for the method/kit pages

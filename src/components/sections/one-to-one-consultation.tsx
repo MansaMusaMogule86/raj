@@ -7,6 +7,7 @@ import { useLang } from "@/lib/i18n";
 import { consult, brand, ascend, ctas } from "@/lib/content";
 import { analytics } from "@/lib/analytics";
 import { ChapterHeader, BrassRule, Timecode, FrameMarker } from "@/components/site/cinematic";
+import { RunTime } from "@/components/site/run-time";
 
 export function OneToOneConsultation() {
   const { lang, t } = useLang();
@@ -26,6 +27,9 @@ export function OneToOneConsultation() {
           title={ar ? "جلسة مركّزة. زاوية واحدة." : "A focused session. One edge."}
           lede={t(consult.whoFor)}
         />
+        <div className="mt-4">
+          <RunTime sectionId="coaching" />
+        </div>
 
         <div className="mt-12 grid lg:grid-cols-12 gap-8">
           {/* Left: what & how */}

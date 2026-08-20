@@ -69,13 +69,21 @@ export function SectionProgress() {
 
   return (
     <div
-      className="fixed top-1/2 -translate-y-1/2 z-20 h-40 w-[2px] bg-bone/10 pointer-events-none hidden lg:block"
-      style={{ [sectionId ? "insetInlineEnd" : "insetInlineEnd"]: "0.5rem" } as React.CSSProperties}
+      className="fixed top-1/2 -translate-y-1/2 z-20 h-48 w-[3px] rounded-full bg-bone/10 pointer-events-none hidden lg:block overflow-hidden"
+      style={{ insetInlineEnd: "0.75rem" } as React.CSSProperties}
       aria-hidden="true"
     >
+      {/* Track glow */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bone/5 to-transparent" />
+      {/* Progress fill — brass to ember */}
       <div
-        className="absolute top-0 inset-x-0 bg-gradient-to-b from-brass to-ember"
+        className="absolute top-0 inset-x-0 rounded-full bg-gradient-to-b from-brass via-brass to-ember shadow-[0_0_12px_rgba(181,138,75,0.5)]"
         style={{ height: `${progress * 100}%`, transition: "height 0.15s linear" }}
+      />
+      {/* Progress head dot */}
+      <div
+        className="absolute inset-x-0 h-1 rounded-full bg-ember"
+        style={{ top: `calc(${progress * 100}% - 2px)`, transition: "top 0.15s linear", boxShadow: "0 0 8px rgba(233,104,58,0.8)" }}
       />
     </div>
   );

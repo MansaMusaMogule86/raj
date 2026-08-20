@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Search, CornerDownLeft, ArrowUp, ArrowDown, Clapperboard } from "lucide-react";
 import { useLang } from "@/lib/i18n";
@@ -11,6 +11,9 @@ import { analytics } from "@/lib/analytics";
  * CommandPalette — Cmd/Ctrl+K chapter quick-jump (film "scene select").
  * Fuzzy search across chapters, keyboard navigable (↑↓ to move, Enter to
  * jump, Esc to close). Fires nav_click analytics on jump.
+ *
+ * Accessibility: full focus-trap (Tab/Shift+Tab cycle within the panel),
+ * focus restored to the trigger on close, aria-modal + labelled.
  */
 export function CommandPalette() {
   const { lang, t } = useLang();
@@ -19,6 +22,9 @@ export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const [active, setActive] = useState(0);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const lastFocused = useRef<HTMLElement | null>(null);
 
   // Cmd/Ctrl+K to open; Esc to close
   useEffect(() => {
@@ -32,6 +38,48 @@ export function CommandPalette() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  // Focus management: save trigger focus, move focus into panel on open,
+  // restore on close. Trap Tab within the panel.
+  useEffect(() => {
+    if (open) {
+      lastFocused.current = document.activeElement as HTMLElement;
+      const id = window.setTimeout(() => inputRef.current?.focus(), 0);
+      return () => window.clearTimeout(id);
+    } else if (lastFocused.current) {
+      lastFocused.current.focus();
+      lastFocused.current = null;
+    }
+  }, [open]);
+
+  // Focus-trap: when open, Tab cycles within the panel
+  useEffect(() => {
+    if (!open) return;
+    const onTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const panel = panelRef.current;
+      if (!panel) return;
+      const focusables = panel.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first || document.activeElement === panel) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    window.addEventListener("keydown", onTab);
+    return () => window.removeEventListener("keydown", onTab);
   }, [open]);
 
   // Reset on close (deferred to avoid cascading renders)
@@ -104,13 +152,14 @@ export function CommandPalette() {
             exit={{ opacity: 0, y: -16, scale: 0.98 }}
             transition={{ duration: reduce ? 0 : 0.25, ease: [0.2, 0.7, 0.1, 1] }}
             onClick={(e) => e.stopPropagation()}
+            ref={panelRef}
             className="w-full max-w-xl bg-obsidian border border-brass/30 rounded-sm shadow-[0_24px_80px_rgba(10,10,9,0.8)] overflow-hidden"
           >
             {/* Search header */}
             <div className="flex items-center gap-3 px-4 py-3 border-b border-bone/10">
               <Clapperboard className="h-4 w-4 text-brass flex-shrink-0" />
               <input
-                autoFocus
+                ref={inputRef}
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 onKeyDown={onListKey}

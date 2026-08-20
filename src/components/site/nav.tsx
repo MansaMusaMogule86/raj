@@ -10,6 +10,7 @@ import { navLinks, brand, ascend, ctas } from "@/lib/content";
 import { analytics } from "@/lib/analytics";
 import { Timecode } from "@/components/site/cinematic";
 import { CommandPaletteTrigger } from "@/components/site/command-palette";
+import { ThemeToggle } from "@/components/site/theme-toggle";
 
 export function Nav() {
   const { lang, t, setLang } = useLang();
@@ -71,6 +72,7 @@ export function Nav() {
             // Dispatch the Cmd+K shortcut programmatically since the palette listens at window level
             window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
           }} />
+          <ThemeToggle />
           <Button
             variant="ghost"
             size="sm"

@@ -343,6 +343,46 @@ html, body { height: 100%; }
 .site-main { flex: 1 0 auto; }
 .site-footer { flex-shrink: 0; }
 
+/* ============================================================
+   Warm light variant — opt-in via [data-theme="light"]
+   A warm bone/sand interpretation of the brand, not a flat white.
+   ============================================================ */
+[data-theme="light"] {
+  --background: #F1EEE6;
+  --foreground: #1B1A18;
+  --card: #E8E3D7;
+  --card-foreground: #1B1A18;
+  --popover: #F1EEE6;
+  --popover-foreground: #1B1A18;
+  --primary: #8A6630;
+  --primary-foreground: #F1EEE6;
+  --secondary: #DDD6C6;
+  --secondary-foreground: #1B1A18;
+  --muted: #E8E3D7;
+  --muted-foreground: #6B6356;
+  --accent: #C4533A;
+  --accent-foreground: #F1EEE6;
+  --border: rgba(27, 26, 24, 0.14);
+  --input: rgba(27, 26, 24, 0.18);
+  --ring: #8A6630;
+  --chart-1: #8A6630;
+  --chart-2: #C8B89B;
+  --chart-3: #485340;
+  --chart-4: #C4533A;
+  --chart-5: #1B1A18;
+}
+[data-theme="light"] body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+[data-theme="light"] .film-grain {
+  opacity: 0.03;
+  mix-blend-mode: multiply;
+}
+[data-theme="light"] .vignette {
+  box-shadow: inset 0 0 160px 30px rgba(27, 26, 24, 0.25);
+}
+
 /* RTL adjustments */
 [dir="rtl"] .ltr-only { display: none; }
 [dir="ltr"] .rtl-only { display: none; }

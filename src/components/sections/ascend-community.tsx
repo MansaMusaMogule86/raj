@@ -14,6 +14,7 @@ import { ascend, faq, brand } from "@/lib/content";
 import { analytics } from "@/lib/analytics";
 import { ChapterHeader, BrassRule, Timecode } from "@/components/site/cinematic";
 import { CountUp } from "@/components/site/count-up";
+import { RunTime } from "@/components/site/run-time";
 
 const TIMELINE = [
   { icon: Users, en: "You arrive", ar: "تصل", desc: { en: "You join the Skool community and get the welcome guide.", ar: "تنضم لمجتمع سكول وتستلم دليل الترحيب." } },
@@ -60,7 +61,10 @@ export function AscendCommunity() {
               transition={{ duration: 0.6 }}
               className="p-6 border border-brass/30 bg-secondary/30 frame-marker"
             >
-              <Timecode className="text-bone/50">{ar ? "الآن" : "Now"}</Timecode>
+              <div className="flex items-center justify-between">
+                <Timecode className="text-bone/50">{ar ? "الآن" : "Now"}</Timecode>
+                <RunTime sectionId="ascend" />
+              </div>
               <div className="mt-4 flex items-end gap-2">
                 <span className="display text-bone text-5xl">
                   <CountUp value={ascend.memberCount} />
