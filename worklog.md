@@ -417,3 +417,57 @@ Task: QA pass + mandatory styling/feature enhancements (round 5)
 - Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
 - Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries)
 - Next-round candidates: no-flash i18n hydration, per-section OG image generation, reading-progress within command palette results, animated film-leader with smoother exit, consent granular toggle, print-specific page breaks for kit product grid
+
+---
+Task ID: REVIEW-06 (sixth webDevReview cron run)
+Agent: webDevReview agent (cron job 331062)
+Task: QA pass + i18n hydration bug fix + mandatory enhancements (round 6)
+
+## Current project status (assessment)
+- v1 + REVIEW-01–05 enhancements stable: 13-section bilingual cinematic site with scroll-progress, consent, director's notes, newsletter, count-up, cinematic bg, keyboard nav, share bars, dividers, command palette (focus-trap), back-to-top, shortcuts, section progress, theme toggle, RunTime, film-leader, print stylesheet, consent auto-dismiss
+- QA this round: dev server 85-414ms responses, lint clean, 2 hydration errors confirmed (priority bug)
+- Fixed the i18n SSR/RTL hydration mismatch (the flagged known bug from REVIEW-05)
+
+## Completed modifications this round
+
+### Bug fix (priority)
+1. **i18n no-flash hydration strategy** (`src/app/layout.tsx` + `src/lib/i18n.tsx`)
+   - Layout now async, reads `ascend-lang` cookie via `await headers()` to render the correct `lang`/`dir` server-side on FIRST paint
+   - Inline bootstrap script applies localStorage lang before paint (only if differs from server-rendered value)
+   - i18n `setLang` now writes a cookie (`max-age=1yr`) alongside localStorage so the server renders the correct direction on next load
+   - Verified: switch to Arabic → reload → server renders `lang="ar" dir="rtl"` immediately (no flash); switch back → `lang="en" dir="ltr"`; hydration error count reduced from 8 to 1 (residual suppressHydrationWarning-suppressed html attr change, non-blocking)
+
+### New features (mandatory: more features)
+1. **OG image generation route** (`src/app/api/og/route.tsx`)
+   - Edge runtime `ImageResponse` rendering 1200×630 cinematic social cards per section
+   - `/api/og?section=<id>&lang=<en|ar>` — branded with obsidian gradient, brass corner brackets, ember glow, chapter number, headline, subtitle, price, CTA
+   - Bilingual (EN + AR titles/subtitles)
+   - Wired into layout openGraph metadata (default hero card)
+   - Verified: HTTP 200, 108KB PNG, VLM confirms "dark/brass/ember on-brand, title hierarchy clear, premium for social"
+2. **Command palette scroll-progress** (`ResultsList` in `src/components/site/command-palette.tsx`)
+   - Refactored results into a `ResultsList` component with internal scroll tracking
+   - Brass→ember hairline bar at the bottom of results that shrinks as you scroll down (appears only when >5 results overflow)
+   - Active item auto-scrolls into view during keyboard nav (↑↓)
+   - Verified: progress bar present at 100% when at top, keyboard nav keeps active item visible ✓
+
+### Styling improvements (mandatory: more details)
+- **Print page breaks for kit/method**: `#kit .grid > *` and `#method .grid > *` get `break-inside: avoid` + borders + padding so each product/pillar stays together on paper
+- **Print section chapter labels**: `section::before` adds a "— Chapter —" mono label in brass before each section in print
+- **OG metadata**: full openGraph images array in layout metadata
+
+## Verification results
+- Lint: 0 errors, 0 warnings
+- agent-browser: no-flash RTL on reload ✓ (server renders ar/rtl from cookie), no-flash LTR ✓, hydration errors reduced from 8→1 ✓, OG route returns 200 + 1200×630 PNG ✓, command palette scroll-progress present + keyboard nav keeps active in view ✓, no regressions
+- Dev log: clean compiles
+- VLM (full page): "visual quality holding — dark cinematic aesthetic with gold accents remains consistent and striking; no regressions; polish significantly improving — scroll progress in search results and print-specific styling shows product-ready feel; i18n fix ensures smoother UX on slower connections"
+- VLM (OG image): "dark-themed, gold corner brackets, warm glow, title hierarchy clear, premium for social sharing"
+
+## Unresolved issues / risks + next-phase recommendations
+- 1 residual hydration warning (suppressHydrationWarning-suppressed html attr) — non-blocking; could be fully eliminated by removing the inline bootstrap script (the cookie-based server render alone suffices, but the inline script handles the localStorage-only case)
+- OG route uses `runtime: edge` — verify the deployment target supports edge; fallback to nodejs runtime if not
+- OG images are generated on-demand (cached 24h) — could pre-generate at build for all 9 chapters
+- Newsletter + contact APIs still in-memory; swap for real ESP before production
+- Real <video> path wired but untested with actual file (awaiting Raja's footage)
+- Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
+- Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries)
+- Next-round candidates: pre-generate OG images at build, remove residual hydration warning, consent granular toggle, animated film-leader with smoother exit, reading-time in command palette results, per-section print headers with actual chapter names (not generic "— Chapter —")

@@ -460,4 +460,29 @@ html, body { height: 100%; }
     border-bottom: 1px solid #ddd;
     padding-bottom: 0.5rem;
   }
+  /* Section headers get a print-only chapter label */
+  section::before {
+    content: "— Chapter —";
+    display: block;
+    font-family: var(--font-mono), monospace;
+    font-size: 7pt;
+    letter-spacing: 0.15em;
+    color: #8A6630;
+    margin-top: 1.5rem;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+  }
+  /* Kit product grid: each product gets its own block, avoid breaking inside */
+  #kit .grid > * {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 0.5rem;
+    border: 1px solid #ddd !important;
+    padding: 0.5rem !important;
+  }
+  /* Method pillars: keep each pillar together */
+  #method .grid > * {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
 }

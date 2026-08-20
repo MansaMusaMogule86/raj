@@ -8,6 +8,90 @@ import { navLinks } from "@/lib/content";
 import { analytics } from "@/lib/analytics";
 
 /**
+ * ResultsList — the command palette results with an internal scroll-progress
+ * bar (brass hairline) that appears when the list overflows. Keeps keyboard
+ * navigation + active-item tracking intact.
+ */
+function ResultsList({
+  results,
+  active,
+  setActive,
+  jump,
+  ar,
+}: {
+  results: { id: string; label: string; num: string; href: string }[];
+  active: number;
+  setActive: (n: number | ((p: number) => number)) => void;
+  jump: (href: string, id: string) => void;
+  ar: boolean;
+}) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(1); // 1 = at top, 0 = at bottom
+
+  const onScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const max = el.scrollHeight - el.clientHeight;
+    if (max <= 0) {
+      setProgress(1);
+      return;
+    }
+    setProgress(1 - el.scrollTop / max);
+  };
+
+  // Keep active item in view during keyboard nav
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const activeEl = el.querySelector(`[data-idx="${active}"]`) as HTMLElement | null;
+    if (activeEl) {
+      activeEl.scrollIntoView({ block: "nearest" });
+    }
+  }, [active]);
+
+  const overflow = results.length > 5;
+
+  return (
+    <div className="relative">
+      <div
+        ref={scrollRef}
+        onScroll={onScroll}
+        className="max-h-[50vh] overflow-y-auto thin-scroll py-2"
+      >
+        {results.length === 0 ? (
+          <p className="px-4 py-6 tc text-bone/40 text-center">{ar ? "لا نتائج" : "No results"}</p>
+        ) : (
+          results.map((r, i) => (
+            <button
+              key={r.id}
+              data-idx={i}
+              onMouseEnter={() => setActive(i)}
+              onClick={() => jump(r.href, r.id)}
+              className={`w-full flex items-center gap-3 px-4 py-2.5 text-start transition-colors ${
+                i === active ? "bg-brass/10 border-s-2 border-brass" : "border-s-2 border-transparent"
+              }`}
+            >
+              <span className="chapter-num text-brass text-lg flex-shrink-0">{r.num}</span>
+              <span className="display text-bone text-base flex-1 truncate">{r.label}</span>
+              {i === active && <CornerDownLeft className="h-3.5 w-3.5 text-bone/50" />}
+            </button>
+          ))
+        )}
+      </div>
+      {/* Scroll-progress hairline — brass, bottom of results, shrinks as you scroll down */}
+      {overflow && (
+        <div className="absolute bottom-0 inset-x-0 h-px bg-bone/5 pointer-events-none">
+          <div
+            className="h-full bg-gradient-to-r from-brass to-ember"
+            style={{ width: `${progress * 100}%`, transition: "width 0.1s linear" }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
  * CommandPalette — Cmd/Ctrl+K chapter quick-jump (film "scene select").
  * Fuzzy search across chapters, keyboard navigable (↑↓ to move, Enter to
  * jump, Esc to close). Fires nav_click analytics on jump.
@@ -170,27 +254,8 @@ export function CommandPalette() {
               <kbd className="tc text-bone/40 border border-bone/15 rounded px-1.5 py-0.5 text-[10px]">ESC</kbd>
             </div>
 
-            {/* Results */}
-            <div className="max-h-[50vh] overflow-y-auto thin-scroll py-2">
-              {results.length === 0 ? (
-                <p className="px-4 py-6 tc text-bone/40 text-center">{ar ? "لا نتائج" : "No results"}</p>
-              ) : (
-                results.map((r, i) => (
-                  <button
-                    key={r.id}
-                    onMouseEnter={() => setActive(i)}
-                    onClick={() => jump(r.href, r.id)}
-                    className={`w-full flex items-center gap-3 px-4 py-2.5 text-start transition-colors ${
-                      i === active ? "bg-brass/10 border-s-2 border-brass" : "border-s-2 border-transparent"
-                    }`}
-                  >
-                    <span className="chapter-num text-brass text-lg flex-shrink-0">{r.num}</span>
-                    <span className="display text-bone text-base flex-1 truncate">{r.label}</span>
-                    {i === active && <CornerDownLeft className="h-3.5 w-3.5 text-bone/50" />}
-                  </button>
-                ))
-              )}
-            </div>
+            {/* Results — with scroll-progress bar when content overflows */}
+            <ResultsList results={results} active={active} setActive={setActive} jump={jump} ar={ar} />
 
             {/* Footer hint */}
             <div className="flex items-center justify-between px-4 py-2 border-t border-bone/10 tc text-bone/40">

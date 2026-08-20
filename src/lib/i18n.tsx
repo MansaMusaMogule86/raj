@@ -49,8 +49,17 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     setLangState(l);
     try {
       localStorage.setItem(STORAGE_KEY, l);
+      // Also set a cookie so the server can render the correct dir/lang on
+      // the NEXT request (no-flash, no hydration mismatch).
+      document.cookie = `${STORAGE_KEY}=${l}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
     } catch {
       /* ignore */
+    }
+    // Reflect immediately on <html> for the current session
+    if (typeof document !== "undefined") {
+      const html = document.documentElement;
+      html.lang = l;
+      html.dir = l === "ar" ? "rtl" : "ltr";
     }
     // analytics
     if (typeof window !== "undefined") {

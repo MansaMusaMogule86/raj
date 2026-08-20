@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Oswald, Inter, JetBrains_Mono, Alexandria } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
@@ -65,6 +66,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     alternateLocale: "ar_AR",
+    images: [
+      {
+        url: "/api/og?section=top&lang=en",
+        width: 1200,
+        height: 630,
+        alt: "Raja Idries — Build the body. Direct the life.",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -76,10 +85,26 @@ export const metadata: Metadata = {
   icons: { icon: "/logo.svg" },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  // Read language preference from cookie (set by the client on change) so the
+  // server renders the correct dir/lang on the FIRST paint — no hydration
+  // mismatch, no flash of wrong direction.
+  const h = await headers();
+  const cookieLang = h.get("cookie") || "";
+  const m = cookieLang.match(/ascend-lang=(en|ar)/);
+  const lang = m ? (m[1] as "en" | "ar") : "en";
+  const dir = lang === "ar" ? "rtl" : "ltr";
   return (
-    <html lang="en" dir="ltr" suppressHydrationWarning>
+    <html lang={lang} dir={dir} suppressHydrationWarning>
       <head>
+        {/* No-flash language bootstrap: apply localStorage lang before paint,
+            but only if it differs from the server-rendered value (avoids
+            touching the DOM when already correct). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var v=localStorage.getItem('ascend-lang');if(v==='ar'||v==='en'){var h=document.documentElement;if(h.lang!==v){h.lang=v;h.dir=v==='ar'?'rtl':'ltr';}}}catch(e){}})();`,
+          }}
+        />
         {/* JSON-LD: Organization / Person */}
         <script
           type="application/ld+json"
