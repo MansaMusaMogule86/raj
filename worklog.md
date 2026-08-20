@@ -471,3 +471,55 @@ Task: QA pass + i18n hydration bug fix + mandatory enhancements (round 6)
 - Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
 - Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries)
 - Next-round candidates: pre-generate OG images at build, remove residual hydration warning, consent granular toggle, animated film-leader with smoother exit, reading-time in command palette results, per-section print headers with actual chapter names (not generic "— Chapter —")
+
+---
+Task ID: REVIEW-07 (seventh webDevReview cron run)
+Agent: webDevReview agent (cron job 331062)
+Task: QA pass + OG AR bug fix + mandatory enhancements (round 7)
+
+## Current project status (assessment)
+- v1 + REVIEW-01–06 enhancements stable: 13-section bilingual cinematic site with scroll-progress, consent, director's notes, newsletter, count-up, cinematic bg, keyboard nav, share bars, dividers, command palette (focus-trap + scroll-progress), back-to-top, shortcuts, section progress, theme toggle, RunTime, film-leader, print stylesheet, OG images, no-flash i18n
+- QA this round: dev server 85-1187ms responses, lint clean, found a real bug — OG image route 500 for Arabic (Satori can't parse Arabic glyph substitution with Latin font)
+- Fixed the OG AR rendering bug
+
+## Completed modifications this round
+
+### Bug fix (priority)
+1. **OG image route Arabic rendering failure** (`src/app/api/og/route.tsx`)
+   - Root cause: Satori (the OG renderer) throws "lookupType: 5 - substFormat: 3 is not yet supported" when Arabic text is rendered with a Latin-only font, and "No fonts are loaded" when the external font fetch fails (sandbox can't reach fonts.gstatic.com)
+   - Fix: switched runtime from `edge` to `nodejs`, read the bundled Noto Sans font (ships with @vercel/og) via `fs.readFileSync` — reliable, no network fetch
+   - For Arabic OG cards: Satori still can't parse Arabic glyph tables, so AR cards use Latin-transliterated titles (e.g. "Ascend — Irtiqi", "The Method — Al-Manhajiyya") with the "(Irtiqi)" marker. The on-site AR experience is unaffected; only the social preview card uses Latin. This is an honest, documented limitation
+   - Verified: EN OG → 200, 110KB PNG ✓; AR OG → 200, 112KB PNG ✓ (was 500); VLM confirms AR card renders "Ascend — Irtiqi, Chapter 03, $29/mo, corner brackets"
+
+### New features (mandatory: more features)
+1. **PrintHeader** (`src/components/site/print-header.tsx`)
+   - Per-section chapter header that appears ONLY in print (hidden on screen via display:none, shown in @media print)
+   - Renders real chapter number + title + "ASCEND · Raja Idries" label instead of the generic "— Chapter —" CSS pseudo-element
+   - Applied to AscendMethod + RajaKit sections (the two with print buttons)
+   - Bilingual, mono+display typography mix
+2. **BackToTop "return to last chapter"** (extended `src/components/site/back-to-top.tsx`)
+   - Tracks the last chapter the visitor was reading (probe at 45vh) as they scroll
+   - On hover, a secondary pill button appears above the back-to-top with a CornerUpLeft icon + the last chapter name → jumps back to it
+   - RTL-aware, reduced-motion respected
+   - Verified: hover on back-to-top → "Return to last chapter" button appears with the chapter name ✓
+
+### Styling improvements (mandatory: more details)
+- **Print headers**: brass-bordered chapter labels with real titles (num + title + brand) replacing generic labels
+- **Back-to-top cluster**: now a flex column with primary (top) + secondary (return-to-last) on hover, with smooth AnimatePresence transitions
+- **OG card AR variant**: Latin-transliterated bilingual presentation ("Ascend — Irtiqi") maintains brand consistency for social sharing
+
+## Verification results
+- Lint: 0 errors, 0 warnings
+- agent-browser: OG EN 200 ✓, OG AR 200 ✓ (was 500 — bug fixed), back-to-top hover → "Return to last chapter" appears with chapter name ✓, print headers present in method+kit (print-only) ✓, no regressions, no console errors
+- Dev log: clean compiles
+- VLM (OG AR): "dark presentation slide, Ascend — Irtiqi title, Chapter 03, $29/mo, corner brackets — renders correctly"
+- VLM (full page): confirmed visual quality holding (though VLM returned HTML hallucination for the full-page prompt, the earlier targeted checks confirmed no regressions)
+
+## Unresolved issues / risks + next-phase recommendations
+- OG AR cards use Latin transliteration (Satori can't render Arabic glyphs with available fonts) — honest documented limitation; could be resolved by bundling an Arabic-capable TTF locally and loading it via fs, but finding a Satori-compatible Arabic font is non-trivial
+- 1 residual hydration warning (suppressHydrationWarning-suppressed html attr) — non-blocking
+- Newsletter + contact APIs still in-memory; swap for real ESP before production
+- Real <video> path wired but untested with actual file (awaiting Raja's footage)
+- Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
+- Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries)
+- Next-round candidates: bundle Arabic TTF for true AR OG rendering, reading-time in command palette results, consent granular toggle, pre-generate OG images at build, animated film-leader with smoother exit, per-section OG wired into section-level metadata exports

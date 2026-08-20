@@ -9,6 +9,7 @@ import { kitItems, kitCategories, type KitItem } from "@/lib/content";
 import { analytics } from "@/lib/analytics";
 import { ChapterHeader, Timecode, FrameMarker, BrassRule } from "@/components/site/cinematic";
 import { PrintButton } from "@/components/site/print-button";
+import { PrintHeader } from "@/components/site/print-header";
 
 export function RajaKit() {
   const { lang, t } = useLang();
@@ -28,6 +29,7 @@ export function RajaKit() {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 md:px-8">
+        <PrintHeader sectionId="kit" />
         <ChapterHeader
           chapter="09"
           kicker={ar ? "عتاد راجا" : "Raja's Kit"}

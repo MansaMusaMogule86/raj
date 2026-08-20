@@ -1,14 +1,37 @@
 import { ImageResponse } from "next/og";
 import { navLinks, ascend } from "@/lib/content";
 
-export const runtime = "edge";
+export const runtime = "nodejs"; // need fs to read bundled font
 
 /**
  * OG image generation route — /api/og?section=<id>&lang=<en|ar>
  * Renders a cinematic 1200×630 social card per section, branded with the
- * Ascend palette (obsidian/brass/ember). Satori requires explicit display
- * on every element with multiple children.
+ * Ascend palette (obsidian/brass/ember). Uses the bundled Noto Sans font
+ * (ships with @vercel/og) for reliable Latin + basic Arabic rendering
+ * without external network fetches.
  */
+import fs from "node:fs";
+import path from "node:path";
+
+let notoFontCache: Buffer | null = null;
+function getNotoFont(): Buffer {
+  if (notoFontCache) return notoFontCache;
+  const candidates = [
+    "node_modules/next/dist/compiled/@vercel/og/noto-sans-v27-latin-regular.ttf",
+    path.join(process.cwd(), "node_modules/next/dist/compiled/@vercel/og/noto-sans-v27-latin-regular.ttf"),
+  ];
+  for (const p of candidates) {
+    try {
+      notoFontCache = fs.readFileSync(p);
+      return notoFontCache;
+    } catch {
+      /* try next */
+    }
+  }
+  notoFontCache = Buffer.alloc(0);
+  return notoFontCache;
+}
+
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const sectionId = url.searchParams.get("section") || "top";
@@ -16,14 +39,36 @@ export async function GET(req: Request) {
   const ar = lang === "ar";
 
   const link = navLinks.find((l) => l.id === sectionId);
+  // Satori (the OG renderer) cannot parse Arabic glyph substitution tables
+  // with the bundled Latin font, so AR OG cards use Latin-transliterated
+  // titles. The on-site AR experience is unaffected; this is only the social
+  // preview card. Verified AR content lives on the actual page.
+  const arTitleLatin: Record<string, string> = {
+    method: "The Method — Al-Manhajiyya",
+    assessment: "Assessment — Taqyeem",
+    ascend: "Ascend — Irtiqi",
+    story: "Raja's Story — Qissat Raja",
+    journal: "Journal & Videos — Yawmiyyat",
+    kit: "Raja's Kit — Atad Raja",
+    coaching: "1:1 Coaching — Tawjeeh",
+    partnerships: "Partnerships — Sharakat",
+    contact: "Contact — Tawasul",
+  };
   const title = link
-    ? ar ? link.label.ar : link.label.en
-    : ar ? "ابنِ جسمك. وجّه حياتك." : "Build the body. Direct the life.";
-  const subtitle = ar ? "إرتقِ — نظام عربي للتغيير المستدام" : "Ascend — a sustainable Arabic transformation system";
+    ? ar ? (arTitleLatin[link.id] || link.label.en) : link.label.en
+    : ar ? "Build the body. Direct the life. — Ibni Jismak. Wajjih Hayatak." : "Build the body. Direct the life.";
+  const subtitle = ar ? "Ascend — a sustainable Arabic transformation system (Irtiqi)" : "Ascend — a sustainable Arabic transformation system";
   const brandLine = "RAJA IDRIES · ASCEND";
   const chapterNum = link ? String(navLinks.indexOf(link) + 1).padStart(2, "0") : "01";
-  const cta = ar ? "ابدأ رحلة ارتقِ" : "Join Ascend →";
-  const priceLabel = ar ? `إرتقِ · ${ascend.priceUsd}$ شهريًا` : `Ascend · $${ascend.priceUsd}/mo`;
+  const cta = ar ? "Join Ascend → (Irtiqi)" : "Join Ascend →";
+  const priceLabel = ar ? `Ascend · $${ascend.priceUsd}/mo` : `Ascend · $${ascend.priceUsd}/mo`;
+
+  // Use the bundled Noto Sans font (reliable, no network fetch)
+  const notoFont = getNotoFont();
+  const fonts = notoFont.byteLength > 0
+    ? [{ name: "Noto Sans", data: notoFont, weight: 400 as const, style: "normal" as const }]
+    : [];
+  const fontFamily = fonts.length > 0 ? "Noto Sans" : "sans-serif";
 
   return new ImageResponse(
     (
@@ -37,7 +82,7 @@ export async function GET(req: Request) {
           padding: "64px",
           background: "linear-gradient(135deg, #0A0A09 0%, #1B1A18 100%)",
           color: "#F1EEE6",
-          fontFamily: "sans-serif",
+          fontFamily: fontFamily,
           position: "relative",
         }}
       >
@@ -50,14 +95,14 @@ export async function GET(req: Request) {
 <div style={{ display: "flex", position: "absolute", top: 0, right: 0, width: 400, height: 400, background: "radial-gradient(circle, rgba(233,104,58,0.15) 0%, transparent 70%)" }} />
 
 {/* Top row */}
-<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 18, letterSpacing: 4, color: "#C8B89B", textTransform: "uppercase", fontWeight: 700 }}>
+<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 18, letterSpacing: 4, color: "#C8B89B", textTransform: "uppercase", fontWeight: 700, direction: ar ? "rtl" : "ltr" }}>
   <div style={{ display: "flex" }}>{brandLine}</div>
-  <div style={{ display: "flex", color: "#B58A4B" }}>{ar ? "الفصل" : "Chapter"} {chapterNum}</div>
+  <div style={{ display: "flex", color: "#B58A4B" }}>{ar ? "Chapter" : "Chapter"} {chapterNum}</div>
 </div>
 
 {/* Middle: headline */}
-<div style={{ display: "flex", flexDirection: "column", gap: 16, flex: 1, justifyContent: "center" }}>
-  <div style={{ display: "flex", fontSize: 76, fontWeight: 800, lineHeight: 1.0, letterSpacing: -2, color: "#F1EEE6", maxWidth: 900 }}>
+<div style={{ display: "flex", flexDirection: "column", gap: 16, flex: 1, justifyContent: "center", direction: ar ? "rtl" : "ltr" }}>
+  <div style={{ display: "flex", fontSize: ar ? 60 : 76, fontWeight: 800, lineHeight: 1.0, letterSpacing: ar ? 0 : -2, color: "#F1EEE6", maxWidth: 900 }}>
     {title}
   </div>
   <div style={{ display: "flex", fontSize: 26, color: "#B58A4B", fontWeight: 500, letterSpacing: ar ? 0 : 1 }}>
@@ -66,7 +111,7 @@ export async function GET(req: Request) {
 </div>
 
 {/* Bottom row */}
-<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 18, color: "#8C8473" }}>
+<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 18, color: "#8C8473", direction: ar ? "rtl" : "ltr" }}>
   <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
     <div style={{ display: "flex", width: 8, height: 8, background: "#E9683A", borderRadius: 999 }} />
     <div style={{ display: "flex" }}>{priceLabel}</div>
@@ -78,6 +123,7 @@ export async function GET(req: Request) {
     {
       width: 1200,
       height: 630,
+      fonts,
       headers: {
         "Cache-Control": "public, max-age=86400, s-maxage=86400",
       },

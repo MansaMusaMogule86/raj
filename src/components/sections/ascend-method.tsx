@@ -7,6 +7,7 @@ import { useLang } from "@/lib/i18n";
 import { pillars } from "@/lib/content";
 import { ChapterHeader, BrassRule } from "@/components/site/cinematic";
 import { PrintButton } from "@/components/site/print-button";
+import { PrintHeader } from "@/components/site/print-header";
 
 const PILLAR_IMAGES: Record<string, string> = {
   training: "/images/scene-training.png",
@@ -31,6 +32,7 @@ export function AscendMethod() {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 md:px-8">
+        <PrintHeader sectionId="method" />
         <ChapterHeader
           chapter="03"
           kicker={ar ? "منهجية إرتقِ" : "The Ascend Method"}
