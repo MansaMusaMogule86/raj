@@ -84,7 +84,7 @@ export function TheRajaCut() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.96 }}
                   transition={{ duration: reduce ? 0 : 0.35, delay: i * 0.03 }}
-                  className="group relative p-5 border border-obsidian/15 bg-white/40 backdrop-blur-sm frame-marker hover:border-brass/50 hover:bg-white/70 transition-all cursor-pointer"
+                  className="group relative p-5 border border-obsidian/15 bg-white/40 backdrop-blur-sm frame-marker hover:border-brass/50 hover:bg-white/70 transition-all cursor-pointer lift"
                 >
                   {/* Top metadata */}
                   <div className="flex items-center justify-between mb-4">

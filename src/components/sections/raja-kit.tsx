@@ -82,7 +82,7 @@ export function RajaKit() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: reduce ? 0 : 0.35, delay: i * 0.04 }}
-                className="group relative flex flex-col p-5 border border-bone/10 bg-secondary/20 frame-marker hover:border-brass/40 transition-colors"
+                className="group relative flex flex-col p-5 border border-bone/10 bg-secondary/20 frame-marker hover:border-brass/40 transition-colors lift"
               >
                 {/* Product image placeholder */}
                 <div className="relative aspect-square mb-4 overflow-hidden bg-obsidian border border-bone/10 flex items-center justify-center">

@@ -289,6 +289,45 @@
   @media (prefers-reduced-motion: reduce) {
     .focus-in { filter: none; opacity: 1; animation: none; }
   }
+
+  /* Brass glow on primary buttons */
+  .glow-brass {
+    box-shadow: 0 0 0 0 rgba(181,138,75,0.0);
+    transition: box-shadow 0.4s ease, transform 0.2s ease;
+  }
+  .glow-brass:hover, .glow-brass:focus-visible {
+    box-shadow: 0 0 32px -4px rgba(181,138,75,0.55), 0 0 0 1px rgba(181,138,75,0.4) inset;
+  }
+
+  /* Card lift on hover */
+  .lift {
+    transition: transform 0.3s cubic-bezier(0.2,0.7,0.1,1), box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .lift:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px -12px rgba(10,10,9,0.6);
+  }
+
+  /* Link underline reveal */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.3s ease;
+  }
+  .link-underline:hover, .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  /* Accessible focus-visible ring (keyboard users) */
+  :focus-visible {
+    outline: 2px solid var(--brass);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  /* Remove default outline only when focus-visible is supported */
+  :focus:not(:focus-visible) { outline: none; }
 }
 
 /* ============================================================

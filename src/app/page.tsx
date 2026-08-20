@@ -8,6 +8,10 @@ import { DirectorsNotes } from "@/components/site/directors-notes";
 import { ConsentBanner } from "@/components/site/consent-banner";
 import { KeyboardNav } from "@/components/site/keyboard-nav";
 import { SectionDivider } from "@/components/site/section-divider";
+import { BackToTop } from "@/components/site/back-to-top";
+import { CommandPalette } from "@/components/site/command-palette";
+import { ShortcutsHint } from "@/components/site/shortcuts-hint";
+import { SectionProgress } from "@/components/site/section-progress";
 import { ColdOpenHero } from "@/components/sections/cold-open-hero";
 import { RealProblem } from "@/components/sections/real-problem";
 import { AscendMethod } from "@/components/sections/ascend-method";
@@ -27,6 +31,8 @@ export default function Home() {
     <div className="site-shell bg-obsidian">
       <ScrollProgress />
       <KeyboardNav />
+      <CommandPalette />
+      <SectionProgress />
       <Nav />
       <StickyCTA />
       <DirectorsNotes />
@@ -63,6 +69,8 @@ export default function Home() {
       </main>
       <Footer />
       <ConsentBanner />
+      <BackToTop />
+      <ShortcutsHint />
     </div>
   );
 }

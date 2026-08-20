@@ -9,6 +9,7 @@ import { useLang } from "@/lib/i18n";
 import { navLinks, brand, ascend, ctas } from "@/lib/content";
 import { analytics } from "@/lib/analytics";
 import { Timecode } from "@/components/site/cinematic";
+import { CommandPaletteTrigger } from "@/components/site/command-palette";
 
 export function Nav() {
   const { lang, t, setLang } = useLang();
@@ -66,6 +67,10 @@ export function Nav() {
 
         {/* Right cluster */}
         <div className="flex items-center gap-2 md:gap-3">
+          <CommandPaletteTrigger onOpen={() => {
+            // Dispatch the Cmd+K shortcut programmatically since the palette listens at window level
+            window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
+          }} />
           <Button
             variant="ghost"
             size="sm"

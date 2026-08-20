@@ -70,7 +70,7 @@ export function Footer() {
           <ul className="grid grid-cols-2 md:grid-cols-1 gap-2">
             {navLinks.map((l) => (
               <li key={l.id}>
-                <a href={l.href} className="text-bone/70 hover:text-brass transition-colors text-sm">
+                <a href={l.href} className="text-bone/70 hover:text-brass transition-colors text-sm link-underline">
                   {t(l.label)}
                 </a>
               </li>

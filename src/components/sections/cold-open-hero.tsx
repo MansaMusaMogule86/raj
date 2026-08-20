@@ -160,7 +160,7 @@ export function ColdOpenHero() {
           <Button
             asChild
             size="lg"
-            className="bg-brass text-obsidian hover:bg-brass/90 rounded-full text-base px-7 h-12"
+            className="bg-brass text-obsidian hover:bg-brass/90 rounded-full text-base px-7 h-12 glow-brass"
           >
             <a
               href={ascend.checkoutUrl}

@@ -252,3 +252,61 @@ Task: QA pass + mandatory styling/feature enhancements (round 2)
 - Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
 - Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries)
 - Next-round candidates: back-to-top floating button, reading-progress within long sections, OG image generation per section, theme toggle (dark is default but a warm light variant could be added)
+
+---
+Task ID: REVIEW-03 (third webDevReview cron run)
+Agent: webDevReview agent (cron job 331062)
+Task: QA pass + mandatory styling/feature enhancements (round 3)
+
+## Current project status (assessment)
+- v1 + REVIEW-01/02 enhancements stable: 13-section bilingual cinematic site with scroll-progress, consent, director's notes (desktop+mobile), newsletter, count-up, cinematic bg, keyboard nav, share bars, section dividers
+- QA this round: dev server 108-410ms responses, 0 console errors, 0 page errors, lint clean (after fixing 2 setState-in-effect in command-palette), all prior features intact (scroll progress ✓, subscribe count:1 ✓, keyboard hint ✓)
+- No bugs found → proceeded to enhancement phase
+
+## Completed modifications this round
+
+### New features (mandatory: more features)
+1. **CommandPalette** (`src/components/site/command-palette.tsx`)
+   - Cmd/Ctrl+K opens a film "scene select" overlay with fuzzy chapter search
+   - Keyboard navigable: ↑↓ to move, Enter to jump, Esc to close
+   - Bilingual search across all 9 chapters; fires nav_click analytics on jump
+   - CommandPaletteTrigger button in nav (desktop) for discoverability
+   - Verified: opens via ⌘K, search "ascend" → result, click → jumps to #ascend ✓
+2. **BackToTop** (`src/components/site/back-to-top.tsx`)
+   - Floating "rewind" button appears after 2.5vh scroll
+   - Circular SVG progress ring (brass→ember) shows overall page scroll %
+   - Smooth scroll to top (respects reduced-motion), RTL-aware position
+   - Verified: present after deep scroll, click → scrollY=0 ✓
+3. **ShortcutsHint** (`src/components/site/shortcuts-hint.tsx`)
+   - Floating keyboard-icon button toggles a panel listing all film-language shortcuts
+   - Shows 1–9 chapter jump, ↑/↓ prev/next, Home/End, ⌘K, Esc
+   - Gives permanent discoverability for the KeyboardNav from REVIEW-02
+4. **SectionProgress** (`src/components/site/section-progress.tsx`)
+   - Thin vertical hairline fixed to viewport edge that fills as the visitor reads through the in-view long section
+   - Tracks per-section scroll progress (not just page); "reading the reel" metaphor
+   - Desktop-only (lg:block), respects reduced-motion
+
+### Styling improvements (mandatory: more details)
+- **globals.css micro-interactions**:
+  - `.glow-brass` — brass box-shadow glow on hover/focus for primary CTAs (applied to hero Join Ascend)
+  - `.lift` — card translateY(-3px) + shadow on hover (applied to Kit product cards + Raja Cut entries)
+  - `.link-underline` — animated underline reveal on hover (applied to footer chapter links)
+  - `:focus-visible` — 2px brass outline ring globally for keyboard users
+- All new utilities respect existing transitions and don't override shadcn defaults
+
+## Verification results
+- Lint: 0 errors, 0 warnings (fixed 2 setState-in-effect in command-palette by deferring with setTimeout)
+- agent-browser: command palette opens via ⌘K ✓, search "ascend" → result ✓, click → jumps to #ascend ✓, back-to-top present + click → scrollY=0 ✓, shortcuts panel opens + shows all 5 shortcuts ✓, section-progress element present ✓, mobile shows back-to-top + shortcuts buttons ✓
+- Dev log: clean compiles, no runtime errors
+- VLM (desktop mid-scroll): "on-brand — brass scroll ring + ⌘K + dark overlays align with cinematic aesthetic; film metaphor strongly reinforced (Chapter search, Scene select, frame-based progress bars treat site like a movie reel); minimal conflicts — floating elements well-positioned, no clutter; polish clearly increasing — hairline progress + hover glows + keyboard hints add professional depth without sacrificing readability"
+- Mobile: back-to-top + shortcuts both present at 390px ✓
+
+## Unresolved issues / risks + next-phase recommendations
+- Section-progress hairline is on the viewport edge; could be more visible/brass-toned next round
+- Command palette trigger uses a synthetic KeyboardEvent dispatch — could expose a direct open() method via context for cleaner integration
+- Newsletter + contact APIs still in-memory; swap for real ESP before production
+- Consent banner still lacks granular analytics/marketing toggle
+- Real <video> path wired but untested with actual file (awaiting Raja's footage)
+- Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
+- Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries)
+- Next-round candidates: per-section OG image generation, theme toggle (warm light variant), reading-time estimate on long sections, focus-trap in command palette for full a11y, animated film-leader intro on first paint
