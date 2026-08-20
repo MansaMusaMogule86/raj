@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { Clapperboard, X } from "lucide-react";
+import { Clapperboard, X, ChevronUp, ChevronDown } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { directorNotes } from "@/lib/directors-notes";
 import { Timecode, ChapterNumber } from "@/components/site/cinematic";
@@ -19,6 +19,7 @@ export function DirectorsNotes() {
   const ar = lang === "ar";
   const [active, setActive] = useState<(typeof directorNotes)[number] | null>(null);
   const [dismissed, setDismissed] = useState(false);
+  const [mobileExpanded, setMobileExpanded] = useState(false);
 
   useEffect(() => {
     let raf = 0;
@@ -98,6 +99,69 @@ export function DirectorsNotes() {
             <span className="tc text-bone/30">{ar ? "إرتقِ — معالجة المخرج" : "ASCEND — dir. treatment"}</span>
           </div>
         </motion.aside>
+      )}
+
+      {/* Mobile chip variant — expandable, sits above the mobile sticky CTA */}
+      {active && (
+        <motion.div
+          key={`mobile-${active.sectionId}`}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ duration: reduce ? 0 : 0.4 }}
+          className="lg:hidden fixed inset-x-3 z-30 bottom-24 bg-obsidian/95 backdrop-blur-md border border-brass/30 rounded-sm shadow-[0_8px_30px_rgba(10,10,9,0.6)] overflow-hidden"
+          style={{ marginBottom: "env(safe-area-inset-bottom)" }}
+          aria-label={ar ? "ملاحظات المخرج" : "Director's note"}
+        >
+          {/* Collapsed chip header */}
+          <button
+            onClick={() => setMobileExpanded((v) => !v)}
+            className="w-full flex items-center justify-between gap-2 p-3 text-start"
+            aria-expanded={mobileExpanded}
+          >
+            <span className="flex items-center gap-2 min-w-0">
+              <Clapperboard className="h-3.5 w-3.5 text-brass flex-shrink-0" />
+              <ChapterNumber num={active.chapter} className="text-brass text-base" />
+              <span className="tc text-bone/50 truncate">{ar ? "ملاحظات المخرج" : "Director's note"}</span>
+            </span>
+            <span className="flex items-center gap-1 flex-shrink-0">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDismissed(true);
+                }}
+                className="text-bone/40 hover:text-bone p-1"
+                aria-label={ar ? "إغلاق" : "Dismiss"}
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+              {mobileExpanded ? (
+                <ChevronDown className="h-4 w-4 text-bone/60" />
+              ) : (
+                <ChevronUp className="h-4 w-4 text-bone/60" />
+              )}
+            </span>
+          </button>
+          <AnimatePresence>
+            {mobileExpanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: reduce ? 0 : 0.3 }}
+                className="px-3 pb-3"
+              >
+                <p className={`text-bone/85 text-sm leading-relaxed pt-1 border-t border-bone/10 ${ar ? "text-right" : ""}`}>
+                  {t(active.note)}
+                </p>
+                <div className="mt-2 flex items-center gap-1">
+                  <span className="h-1 w-1 rounded-full bg-brass/60" />
+                  <span className="tc text-bone/30">{ar ? "إرتقِ — معالجة المخرج" : "ASCEND — dir. treatment"}</span>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       )}
     </AnimatePresence>
   );

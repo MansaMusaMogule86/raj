@@ -5,6 +5,7 @@ import { Quote } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { transformStories, healthDisclaimer } from "@/lib/content";
 import { ChapterHeader, BrassRule, Timecode, FrameMarker } from "@/components/site/cinematic";
+import { ShareBar } from "@/components/site/share-bar";
 
 const FIELDS: { key: keyof typeof transformStories[number]; label: { en: string; ar: string } }[] = [
   { key: "reality", label: { en: "Starting reality", ar: "الواقع البدئي" } },
@@ -85,6 +86,9 @@ export function TransformationStories() {
                 <span className="h-1.5 w-1.5 rounded-full bg-brass/60" />
                 {ar ? "قصة مرشدة — تُتحقّق وتُؤذن قبل الإطلاق" : "Curated story — to verify & authorize before launch"}
               </p>
+              <div className="mt-3 pt-3 border-t border-bone/10">
+                <ShareBar title={ar ? "قصة تحوّل — إرتقِ" : "Transformation story — Ascend"} sectionId={`stories-${s.id}`} />
+              </div>
             </motion.article>
           ))}
         </div>

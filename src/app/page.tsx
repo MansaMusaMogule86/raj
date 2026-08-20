@@ -6,6 +6,8 @@ import { Footer } from "@/components/site/footer";
 import { ScrollProgress } from "@/components/site/scroll-progress";
 import { DirectorsNotes } from "@/components/site/directors-notes";
 import { ConsentBanner } from "@/components/site/consent-banner";
+import { KeyboardNav } from "@/components/site/keyboard-nav";
+import { SectionDivider } from "@/components/site/section-divider";
 import { ColdOpenHero } from "@/components/sections/cold-open-hero";
 import { RealProblem } from "@/components/sections/real-problem";
 import { AscendMethod } from "@/components/sections/ascend-method";
@@ -24,6 +26,7 @@ export default function Home() {
   return (
     <div className="site-shell bg-obsidian">
       <ScrollProgress />
+      <KeyboardNav />
       <Nav />
       <StickyCTA />
       <DirectorsNotes />
@@ -34,16 +37,19 @@ export default function Home() {
         <RealProblem />
         {/* 3 — THE ASCEND METHOD */}
         <AscendMethod />
+        <SectionDivider fromChapter="03" toChapter="04" label="METHOD → PATH" className="bg-obsidian text-bone" />
         {/* 4 — CHOOSE YOUR NEXT SCENE */}
         <ChooseNextScene />
         {/* 5 — ASCEND COMMUNITY */}
         <AscendCommunity />
+        <SectionDivider fromChapter="05" toChapter="06" label="COMMUNITY → STORY" className="bg-bone text-obsidian" />
         {/* 6 — RAJA'S STORY */}
         <RajaStory />
         {/* 7 — TRANSFORMATION STORIES */}
         <TransformationStories />
         {/* 8 — THE RAJA CUT */}
         <TheRajaCut />
+        <SectionDivider fromChapter="08" toChapter="09" label="CUT → KIT" className="bg-bone text-obsidian" />
         {/* 9 — RAJA'S KIT */}
         <RajaKit />
         {/* 10 — ONE-TO-ONE CONSULTATION */}

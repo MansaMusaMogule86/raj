@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, Play, Volume2 } from "lucide-react";
+import { ArrowUpRight, Play, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLang } from "@/lib/i18n";
 import { brand, ascend, ctas, lines } from "@/lib/content";
 import { analytics } from "@/lib/analytics";
 import { Timecode } from "@/components/site/cinematic";
+import { CinematicBackground } from "@/components/site/cinematic-background";
 
 const FLASH_WORDS = [
   { en: "TRAIN", ar: "درّب" },
@@ -25,6 +26,7 @@ export function ColdOpenHero() {
   const reduce = useReducedMotion();
   const ar = lang === "ar";
   const [phase, setPhase] = useState<0 | 1 | 2>(reduce ? 2 : 0);
+  const [muted, setMuted] = useState(true);
 
   useEffect(() => {
     if (reduce) {
@@ -46,18 +48,17 @@ export function ColdOpenHero() {
       className="relative min-h-[100svh] w-full overflow-hidden bg-obsidian"
       aria-label="Cold open"
     >
-      {/* Background image / poster fallback (lazy video slot reserved) */}
+      {/* Background: ambient cinematic layer with poster fallback (lazy video slot reserved) */}
       <motion.div
         className="absolute inset-0"
         initial={{ opacity: 0 }}
         animate={{ opacity: phase >= 1 ? 1 : 0.55 }}
         transition={{ duration: 1.2 }}
       >
-        <img
-          src="/images/hero-portrait.png"
+        <CinematicBackground
+          posterSrc="/images/hero-portrait.png"
           alt={ar ? "بورتريه سينمائي لراجا إدريس" : "Cinematic portrait of Raja Idries"}
-          className="h-full w-full object-cover object-center"
-          fetchPriority="high"
+          priority
         />
         {/* Cinematic gradients + vignette */}
         <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/30 to-obsidian/60" />
@@ -211,10 +212,19 @@ export function ColdOpenHero() {
         </motion.div>
       </div>
 
-      {/* Video/audio toggle (placeholder — video would lazy-mount here) */}
+      {/* Ambient video audio toggle (toggles future video mute; currently visual) */}
       <div className="absolute bottom-6 end-4 md:end-8 z-30">
-        <Button variant="ghost" size="icon" className="text-bone/40 hover:text-bone rounded-full" aria-label="Sound">
-          <Volume2 className="h-4 w-4" />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-bone/40 hover:text-bone rounded-full border border-bone/15 hover:border-brass/40 transition-colors"
+          aria-label={muted ? (ar ? "تشغيل الصوت" : "Unmute") : (ar ? "كتم الصوت" : "Mute")}
+          onClick={() => {
+            setMuted((m) => !m);
+            analytics.track({ event: "video_play", id: "hero_ambient", title: muted ? "hero_unmute" : "hero_mute", lang });
+          }}
+        >
+          {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
         </Button>
       </div>
     </section>

@@ -6,6 +6,7 @@ import { Play, FileText, Mic, ArrowUpRight } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { cutEntries, cutCategories, type CutEntry } from "@/lib/content";
 import { ChapterHeader, Timecode, FrameMarker } from "@/components/site/cinematic";
+import { ShareBar } from "@/components/site/share-bar";
 
 const ICONS: Record<CutEntry["kind"], typeof Play> = {
   video: Play,
@@ -118,6 +119,10 @@ export function TheRajaCut() {
                   <div className="mt-4 flex items-center justify-between">
                     <span className="tc text-obsidian/40">{e.category.toUpperCase()}</span>
                     <ArrowUpRight className="h-4 w-4 text-obsidian/40 group-hover:text-brass transition-colors" />
+                  </div>
+
+                  <div className="mt-3 pt-3 border-t border-obsidian/10">
+                    <ShareBar title={t(e.title)} sectionId={`cut-${e.id}`} />
                   </div>
 
                   {e.placeholder && (

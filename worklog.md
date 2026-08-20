@@ -197,3 +197,58 @@ Task: QA pass + mandatory styling/feature enhancements
 - Lazy muted hero video with poster fallback not yet added (currently static image) — next round candidate
 - Could add keyboard chapter navigation (1-9 to jump) as further film-language touch
 - Could add share buttons on transformation stories + cut entries
+
+---
+Task ID: REVIEW-02 (second webDevReview cron run)
+Agent: webDevReview agent (cron job 331062)
+Task: QA pass + mandatory styling/feature enhancements (round 2)
+
+## Current project status (assessment)
+- v1 + REVIEW-01 enhancements stable: 13-section bilingual cinematic site with scroll-progress, consent banner, director's notes, newsletter subscribe, count-up
+- QA this round: dev server 133-452ms responses, 0 console errors, 0 page errors, lint clean, all REVIEW-01 features intact (scroll progress ✓, subscribe count:1 ✓, consent stored ✓)
+- No bugs found → proceeded to enhancement phase
+
+## Completed modifications this round
+
+### New features (mandatory: more features)
+1. **CinematicBackground** (`src/components/site/cinematic-background.tsx`)
+   - Lazy-mounted ambient muted "video" background with poster-image fallback
+   - Honesty approach: Raja has not supplied a real video file, so rather than fabricate footage, renders a CSS-driven ambient layer (slow light drift + scale) over the poster that reads as a muted video. When Raja provides a real .mp4, set `videoSrc` prop and it lazy-mounts a real <video> (muted/loop/playsInline, IntersectionObserver pauses when offscreen)
+   - Respects prefers-reduced-motion (poster-only)
+   - Wired into ColdOpenHero; sound toggle now functional (muted/unmuted state + analytics)
+2. **KeyboardNav** (`src/components/site/keyboard-nav.tsx`)
+   - Number keys 1–9 jump to corresponding chapter (film "scene select")
+   - ArrowDown/ArrowUp jump to next/prev chapter based on scroll position
+   - Home/End jump to opening/final-ascent
+   - Shows a film-slate hint overlay when keys used; one-time hint after first scroll past hero ("Press 1–9 or arrows to jump chapters")
+   - Ignores keys when typing in input/textarea
+3. **Mobile Director's Notes chip** (extended `src/components/site/directors-notes.tsx`)
+   - Previously desktop-only; now has a mobile expandable chip variant (lg:hidden) positioned above the mobile sticky CTA with safe-area margin
+   - Collapsible header (chevron) + expandable note body; dismiss button
+   - Animated height/opacity transition
+4. **ShareBar** (`src/components/site/share-bar.tsx`)
+   - Compact share controls: copy-link (with copied state + toast), X/Twitter share, Facebook share
+   - Fires analytics on each share action
+   - Integrated into Transformation Stories cards + The Raja Cut entries
+
+### Styling improvements (mandatory: more details)
+- **SectionDivider** (`src/components/site/section-divider.tsx`): cinematic chapter-transition dividers with thin brass wipe-in rules + "CH xx → CH yy" labels, placed between Method→Path, Community→Story, Cut→Kit transitions — reinforces documentary scene-change feel
+- Sound toggle restyled with border + hover state
+- Mobile director's note chip uses safe-area-aware positioning
+
+## Verification results
+- Lint: 0 errors, 0 warnings
+- agent-browser: cinematic background ambient layer present ✓, sound toggle aria-label "Unmute" ✓ (toggles), section divider "CH 03 METHOD → PATH CH 04" visible ✓, share bars present on #journal + #stories ✓, keyboard nav: press 5 → hint "Chapter 05 · Journal & Videos" + scrolled to journal section ✓, mobile director's note chip present + expands via click (aria-expanded=true) ✓
+- Dev log: clean compiles, no runtime errors
+- VLM (desktop mid-scroll): "new elements clearly visible, section dividers act as visual scene changes reinforcing documentary structure, no visual conflicts, polish has noticeably increased — moving closer to a premium digital experience"
+- VLM notes ambient light drift adds depth without distraction, share buttons integrated without clutter
+
+## Unresolved issues / risks + next-phase recommendations
+- agent-browser direct click on mobile director's note chip is occasionally blocked by overlapping elements at certain scroll positions; functional via JS click — could raise chip z-index or add scroll-margin next round
+- Newsletter + contact APIs still in-memory; swap for real ESP before production
+- Consent banner still lacks granular analytics/marketing toggle
+- Keyboard nav maps 1–9 to the 9 nav items, not to all 13 chapters — could expand to 1–9 + letter shortcuts (m=method, a=ascend, etc.) next round
+- Lazy muted hero video uses CSS ambient layer; real <video> path is wired but untested with an actual file (awaiting Raja's footage)
+- Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
+- Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries)
+- Next-round candidates: back-to-top floating button, reading-progress within long sections, OG image generation per section, theme toggle (dark is default but a warm light variant could be added)
