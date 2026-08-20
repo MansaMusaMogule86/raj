@@ -62,7 +62,13 @@ export function AscendCommunity() {
               className="p-6 border border-brass/30 bg-secondary/30 frame-marker"
             >
               <div className="flex items-center justify-between">
-                <Timecode className="text-bone/50">{ar ? "الآن" : "Now"}</Timecode>
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                  </span>
+                  <Timecode className="text-bone/50">{ar ? "مباشر" : "Live"}</Timecode>
+                </div>
                 <RunTime sectionId="ascend" />
               </div>
               <div className="mt-4 flex items-end gap-2">
@@ -71,6 +77,12 @@ export function AscendCommunity() {
                 </span>
                 <span className="text-bone/60 text-sm mb-1">{ar ? "مشترك" : "members"}</span>
               </div>
+              {ascend.memberCountVerified && (
+                <p className="tc text-emerald-400/70 mt-1 flex items-center gap-1">
+                  <span className="h-1 w-1 rounded-full bg-emerald-400" />
+                  {ar ? "رقم موثّق من سكول" : "Verified from Skool"}
+                </p>
+              )}
               <div className="mt-4 flex items-baseline gap-2">
                 <span className="display text-brass text-3xl">$<CountUp value={ascend.priceUsd} /></span>
                 <span className="tc text-bone/60">/ {ar ? "شهر" : "month"}</span>

@@ -626,3 +626,54 @@ Task: QA pass + mandatory enhancements (round 9)
 - Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
 - Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries)
 - Next-round candidates: bundle Arabic TTF for true AR OG, pre-generate OG images at build, animated film-leader smoother exit, per-section canonical URLs as separate routes for true SEO, consent preferences summary in footer, reading-time progress bars within sections
+
+---
+Task ID: REVIEW-10 (tenth webDevReview cron run)
+Agent: webDevReview agent (cron job 331062)
+Task: QA pass + mandatory enhancements (round 10)
+
+## Current project status (assessment)
+- v1 + REVIEW-01–09 enhancements stable: 13-section bilingual cinematic site with scroll-progress, consent (granular + re-open from footer), director's notes, newsletter, count-up, cinematic bg, keyboard nav, share bars, dividers, command palette (focus-trap + scroll-progress + RT badges), back-to-top (return-to-last), shortcuts, section progress (with chapter label), theme toggle, RunTime, film-leader, print stylesheet + headers, OG images (EN+AR), no-flash i18n, nav active indicator, BreadcrumbList SEO
+- QA this round: dev server 189-1233ms responses, lint clean, 0 errors, all prior features intact (consent reopens ✓, section-progress label "03 · Ascend" ✓, OG EN/AR 200 ✓)
+- No bugs found → proceeded to enhancement phase
+
+## Completed modifications this round
+
+### New features (mandatory: more features)
+1. **ConsentStatus indicator** (`src/components/site/consent-status.tsx` + footer)
+   - Tiny status dot + label in the footer legal row showing the visitor's current consent state: "Accepted" (emerald), "Declined" (faded), or "Not set" (ember)
+   - Reactively updates when the consent banner's `ascend:consent` event fires or localStorage changes
+   - Verified: footer shows "Not set" before any decision ✓
+2. **Verified badge + live indicator on Ascend stat card** (extended `src/components/sections/ascend-community.tsx`)
+   - "Now" label replaced with a pulsing emerald "Live" dot (animate-ping + solid dot) + "Live" timecode
+   - Added "Verified from Skool" / "رقم موثّق من سكول" badge (emerald) under the member count when `memberCountVerified` is true
+   - Honest: only shows when the data is actually verified (no fake trust signals)
+   - Verified: "Verified from Skool" present + live ping element present ✓
+3. **Mobile nav scroll-spy** (extended `src/components/site/nav.tsx`)
+   - Mobile sheet nav items now highlight the active chapter (brass text + brass border + "▸" marker + indented ps-3)
+   - Uses the same `activeSection` state as the desktop nav
+   - Verified: when viewing the Story section, "Raja's Story ▸ 04" is highlighted in the mobile menu ✓
+
+### Styling improvements (mandatory: more details)
+- **Animated kicker hairline** (extended `src/components/site/cinematic.tsx` ChapterHeader)
+  - The brass hairline next to the chapter kicker now grows from 0→40px on reveal (brass→ember gradient)
+  - Replaces the static `w-10 bg-brass/60` span with a motion.span that animates width
+  - Respects reduced-motion (instant 40px)
+  - Verified: kicker hairline animates to 40px width ✓
+- **Ascend stat card**: pulsing live dot + emerald verified badge add a premium "real-time data" feel
+- **Mobile nav**: active chapter gets brass treatment + ▸ marker for clear orientation
+
+## Verification results
+- Lint: 0 errors, 0 warnings
+- agent-browser: consent status "Not set" in footer ✓, "Verified from Skool" badge on Ascend card ✓, live ping indicator present ✓, mobile nav highlights "Raja's Story ▸ 04" as active ✓, kicker hairline animates to 40px ✓, no console errors, no regressions
+- Dev log: clean compiles
+- All prior features intact
+
+## Unresolved issues / risks + next-phase recommendations
+- OG AR cards still use Latin transliteration (Satori can't render Arabic glyphs) — documented limitation
+- 1 residual hydration warning (suppressHydrationWarning-suppressed html attr) — non-blocking
+- Newsletter + contact APIs still in-memory; swap for real ESP before production
+- Real <video> path wired but untested with actual file (awaiting Raja's footage)
+- Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
+- Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries)
+- Next-round candidates: bundle Arabic TTF for true AR OG, pre-generate OG images at build, animated film-leader smoother exit, per-section canonical URLs as separate routes, consent preferences summary panel, reading-time progress bars within sections, keyboard shortcut to open consent from anywhere

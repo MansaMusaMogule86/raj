@@ -66,7 +66,13 @@ export function ChapterHeader({
       <motion.div variants={reveal} className="flex items-center gap-3">
         <ChapterNumber num={chapter} className="text-brass text-base" />
         <span className="tc">{kicker}</span>
-        <span className="h-px w-10 bg-brass/60" />
+        <motion.span
+          className="h-px bg-gradient-to-r from-brass to-ember"
+          initial={{ width: reduce ? 40 : 0 }}
+          whileInView={{ width: 40 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: reduce ? 0 : 0.8, ease: [0.2, 0.7, 0.1, 1], delay: reduce ? 0 : 0.2 }}
+        />
       </motion.div>
       <motion.h2
         variants={reveal}

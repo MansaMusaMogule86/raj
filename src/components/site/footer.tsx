@@ -6,6 +6,7 @@ import { brand, socials, navLinks, healthDisclaimer, ascend, ctas } from "@/lib/
 import { Timecode, BrassRule } from "@/components/site/cinematic";
 import { Button } from "@/components/ui/button";
 import { SubscribeBand } from "@/components/site/subscribe-form";
+import { ConsentStatus } from "@/components/site/consent-status";
 
 export function Footer() {
   const { lang, t, setLang } = useLang();
@@ -116,6 +117,7 @@ export function Footer() {
       <div className="relative mx-auto max-w-7xl px-4 md:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-start">
         <p className="tc text-bone/40 max-w-3xl">{t(healthDisclaimer)}</p>
         <div className="flex items-center gap-4">
+          <ConsentStatus />
           <button
             onClick={() => {
               if (typeof window !== "undefined") {

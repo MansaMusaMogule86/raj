@@ -150,16 +150,25 @@ export function Nav() {
               </SheetTitle>
               <div className="mt-8 flex flex-col gap-1">
                 <Timecode className="text-bone/40 mb-2">{lang === "ar" ? "الفصول" : "Chapters"}</Timecode>
-                {navLinks.map((l, i) => (
+                {navLinks.map((l, i) => {
+                  const isActive = activeSection === l.id;
+                  return (
                   <button
                     key={l.id}
                     onClick={() => go(l.href, l.id)}
-                    className="group flex items-center justify-between py-3 border-b border-bone/10 text-bone/90 hover:text-brass transition-colors"
+                    className={`group flex items-center justify-between py-3 border-b transition-colors ${
+                      isActive
+                        ? "border-brass text-brass ps-3"
+                        : "border-bone/10 text-bone/90 hover:text-brass ps-0"
+                    }`}
                   >
-                    <span className="display text-2xl">{t(l.label)}</span>
-                    <span className="tc text-bone/40">{String(i + 1).padStart(2, "0")}</span>
+                    <span className={`display text-2xl ${isActive ? "text-brass" : ""}`}>{t(l.label)}</span>
+                    <span className={`tc ${isActive ? "text-brass" : "text-bone/40"}`}>
+                      {isActive ? "▸ " : ""}{String(i + 1).padStart(2, "0")}
+                    </span>
                   </button>
-                ))}
+                  );
+                })}
               </div>
               <div className="mt-auto pt-6 flex flex-col gap-3">
                 <Button
