@@ -2,18 +2,27 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Cookie, Check, X, Info } from "lucide-react";
+import { Cookie, Check, X, Info, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { useLang } from "@/lib/i18n";
 
 type Consent = "accepted" | "declined" | null;
 const KEY = "ascend-consent";
+const PREFS_KEY = "ascend-consent-prefs";
+
+interface Prefs {
+  analytics: boolean;
+  marketing: boolean;
+}
 
 export function ConsentBanner() {
   const { lang } = useLang();
   const ar = lang === "ar";
   const [consent, setConsent] = useState<Consent>(null);
   const [ready, setReady] = useState(false);
+  const [prefs, setPrefs] = useState<Prefs>({ analytics: true, marketing: false });
+  const [showPrefs, setShowPrefs] = useState(false);
 
   useEffect(() => {
     let stored: Consent = null;
@@ -53,11 +62,13 @@ export function ConsentBanner() {
     setShow(false);
     try {
       localStorage.setItem(KEY, c);
+      // Save granular prefs alongside the consent decision
+      localStorage.setItem(PREFS_KEY, JSON.stringify(c === "accepted" ? prefs : { analytics: false, marketing: false }));
     } catch {
       /* ignore */
     }
     // Notify analytics layer
-    window.dispatchEvent(new CustomEvent("ascend:consent", { detail: { consent: c } }));
+    window.dispatchEvent(new CustomEvent("ascend:consent", { detail: { consent: c, prefs: c === "accepted" ? prefs : null } }));
   };
 
   return (
@@ -99,6 +110,17 @@ export function ConsentBanner() {
               <div className="flex items-center gap-2 flex-shrink-0">
                 <Button
                   size="sm"
+                  variant="ghost"
+                  onClick={() => setShowPrefs((v) => !v)}
+                  className="text-bone/50 hover:text-bone hover:bg-bone/5 rounded-full gap-1"
+                  aria-expanded={showPrefs}
+                  aria-label={ar ? "تخصيص التفضيلات" : "Customize preferences"}
+                >
+                  {showPrefs ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+                  {ar ? "تفضيلات" : "Customize"}
+                </Button>
+                <Button
+                  size="sm"
                   variant="outline"
                   onClick={() => decide("declined")}
                   className="border-bone/25 text-bone/70 hover:bg-bone/5 rounded-full"
@@ -116,6 +138,44 @@ export function ConsentBanner() {
                 </Button>
               </div>
             </div>
+
+            {/* Granular preferences — expandable */}
+            <AnimatePresence>
+              {showPrefs && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-4 pt-4 border-t border-bone/10 space-y-3">
+                    <label className="flex items-center justify-between gap-3 cursor-pointer">
+                      <span>
+                        <span className="text-bone/90 text-sm block">{ar ? "تحليلات مجهولة الهوية" : "Anonymous analytics"}</span>
+                        <span className="tc text-bone/40">{ar ? "أي الفصول تهمك — بدون بيانات شخصية" : "Which chapters you care about — no personal data"}</span>
+                      </span>
+                      <Switch
+                        checked={prefs.analytics}
+                        onCheckedChange={(v) => setPrefs((p) => ({ ...p, analytics: v }))}
+                        aria-label={ar ? "تحليلات" : "Analytics"}
+                      />
+                    </label>
+                    <label className="flex items-center justify-between gap-3 cursor-pointer">
+                      <span>
+                        <span className="text-bone/90 text-sm block">{ar ? "إرسال شهري" : "Monthly dispatch"}</span>
+                        <span className="tc text-bone/40">{ar ? "أفكار راجا مرة بالشهر" : "Raja's notes once a month"}</span>
+                      </span>
+                      <Switch
+                        checked={prefs.marketing}
+                        onCheckedChange={(v) => setPrefs((p) => ({ ...p, marketing: v }))}
+                        aria-label={ar ? "إرسال" : "Dispatch"}
+                      />
+                    </label>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </motion.div>
       )}

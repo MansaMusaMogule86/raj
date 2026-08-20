@@ -523,3 +523,55 @@ Task: QA pass + OG AR bug fix + mandatory enhancements (round 7)
 - Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
 - Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries)
 - Next-round candidates: bundle Arabic TTF for true AR OG rendering, reading-time in command palette results, consent granular toggle, pre-generate OG images at build, animated film-leader with smoother exit, per-section OG wired into section-level metadata exports
+
+---
+Task ID: REVIEW-08 (eighth webDevReview cron run)
+Agent: webDevReview agent (cron job 331062)
+Task: QA pass + mandatory enhancements (round 8)
+
+## Current project status (assessment)
+- v1 + REVIEW-01–07 enhancements stable: 13-section bilingual cinematic site with scroll-progress, consent, director's notes, newsletter, count-up, cinematic bg, keyboard nav, share bars, dividers, command palette (focus-trap + scroll-progress), back-to-top (return-to-last), shortcuts, section progress, theme toggle, RunTime, film-leader, print stylesheet, OG images (EN+AR), no-flash i18n, print headers
+- QA this round: dev server 85-1187ms responses, lint clean, 0 errors, all prior features intact (OG EN 200 ✓, OG AR 200 ✓, back-to-top present ✓)
+- No bugs found → proceeded to enhancement phase
+
+## Completed modifications this round
+
+### New features (mandatory: more features)
+1. **Reading-time badges in command palette** (extended `src/components/site/command-palette.tsx`)
+   - Each result row now shows an "RT mm:ss" badge (brass, mono) estimating that chapter's reading time
+   - Computed on-demand from each section's word count (200 wpm), cached in `dataset.rt` to avoid re-measuring
+   - Verified: 9 RT badges present ("RT 01:45, RT 01:20, RT 02:39, ...")
+2. **Consent granular toggle** (extended `src/components/site/consent-banner.tsx`)
+   - "Customize" button expands a preferences panel with two Switch toggles:
+     - Anonymous analytics (on by default)
+     - Monthly dispatch / marketing (off by default)
+   - Preferences saved to `ascend-consent-prefs` localStorage alongside the consent decision
+   - The consent event now includes the prefs in its detail payload
+   - Verified: Customize button → panel expands with "Anonymous analytics" (checked) + "Monthly dispatch" switches ✓
+3. **Per-section OG metadata helper** (`getSectionOgMeta` in `src/lib/content.ts`)
+   - Generates section-specific Open Graph title/description/ogImage URL for each chapter
+   - Used by the ShareBar so shared links render the correct cinematic social card per section
+   - Share URL now uses `/#sectionId` anchor so recipients land on the right chapter
+   - Verified: X share URL now includes title + brand + correct section anchor ✓
+
+### Styling improvements (mandatory: more details)
+- **Nav active-section indicator** (extended `src/components/site/nav.tsx`)
+  - Tracks the current section via scroll probe at 45vh
+  - Active nav link gets full-bone color + a brass underline (motion `layoutId` for smooth transition between links)
+  - Verified: when viewing Ascend section, "Ascend" nav link is underlined in brass ✓
+- **Consent preferences panel**: brass-tinted switches with descriptive labels, expandable height animation
+
+## Verification results
+- Lint: 0 errors, 0 warnings
+- agent-browser: RT badges in palette (9 chapters) ✓, consent Customize → preferences panel with analytics+marketing switches ✓, nav active underline on "Ascend" when viewing that section ✓, share URL includes title+brand+section anchor ✓, no console errors, no regressions
+- Dev log: clean compiles
+- VLM (nav): confirmed "ASCEND is underlined to indicate it's the active section" + all utility icons (⌘K, theme toggle, language, Join Ascend) visible
+
+## Unresolved issues / risks + next-phase recommendations
+- OG AR cards still use Latin transliteration (Satori can't render Arabic glyphs) — documented limitation
+- 1 residual hydration warning (suppressHydrationWarning-suppressed html attr) — non-blocking
+- Newsletter + contact APIs still in-memory; swap for real ESP before production
+- Real <video> path wired but untested with actual file (awaiting Raja's footage)
+- Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
+- Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries)
+- Next-round candidates: bundle Arabic TTF for true AR OG, pre-generate OG images at build, animated film-leader smoother exit, consent re-open from footer, reading-progress per-section in nav, per-section canonical URLs for SEO

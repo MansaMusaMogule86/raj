@@ -16,12 +16,35 @@ export function Nav() {
   const { lang, t, setLang } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 40);
+        // Determine active section by probing at 45vh
+        const probe = window.innerHeight * 0.45;
+        let current: string | null = null;
+        for (const l of navLinks) {
+          const el = document.getElementById(l.id);
+          if (!el) continue;
+          const r = el.getBoundingClientRect();
+          if (r.top <= probe && r.bottom > probe) {
+            current = l.id;
+            break;
+          }
+        }
+        setActiveSection(current);
+      });
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   const go = (href: string, id: string) => {
@@ -55,15 +78,27 @@ export function Nav() {
 
         {/* Desktop links */}
         <div className="hidden lg:flex items-center gap-6">
-          {navLinks.slice(0, 7).map((l) => (
-            <button
-              key={l.id}
-              onClick={() => go(l.href, l.id)}
-              className="tc text-bone/70 hover:text-bone transition-colors"
-            >
-              {t(l.label)}
-            </button>
-          ))}
+          {navLinks.slice(0, 7).map((l) => {
+            const isActive = activeSection === l.id;
+            return (
+              <button
+                key={l.id}
+                onClick={() => go(l.href, l.id)}
+                className={`relative tc transition-colors ${
+                  isActive ? "text-bone" : "text-bone/70 hover:text-bone"
+                }`}
+              >
+                {t(l.label)}
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-active-underline"
+                    className="absolute -bottom-1 inset-x-0 h-px bg-brass"
+                    transition={{ duration: 0.2 }}
+                  />
+                )}
+              </button>
+            );
+          })}
         </div>
 
         {/* Right cluster */}

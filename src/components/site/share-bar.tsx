@@ -5,12 +5,13 @@ import { Share2, Link2, Check, Twitter, Facebook } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLang } from "@/lib/i18n";
 import { analytics } from "@/lib/analytics";
+import { getSectionOgMeta } from "@/lib/content";
 
 /**
  * ShareBar — compact share controls for content entries.
- * Copies a permalink, offers X (Twitter) + Facebook share, fires a
- * nav_click-style analytics event (reusing product_click for share actions).
- * Honesty: shares the site URL + entry title; no fabricated engagement counts.
+ * Copies a permalink with section-specific OG metadata, offers X (Twitter)
+ * + Facebook share, fires analytics. Uses the per-section OG helper so shared
+ * links render the correct cinematic social card.
  */
 export function ShareBar({
   title,
@@ -26,8 +27,12 @@ export function ShareBar({
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
 
-  const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/${sectionId}` : "";
-  const shareText = encodeURIComponent(title);
+  // Use per-section OG metadata for richer social sharing
+  const ogMeta = getSectionOgMeta(sectionId, lang);
+  const shareUrl = typeof window !== "undefined"
+    ? `${window.location.origin}/#${sectionId}`
+    : "";
+  const shareText = encodeURIComponent(`${title} — Raja Idries · Ascend`);
 
   const copy = async () => {
     try {

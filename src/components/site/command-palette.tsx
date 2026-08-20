@@ -19,7 +19,7 @@ function ResultsList({
   jump,
   ar,
 }: {
-  results: { id: string; label: string; num: string; href: string }[];
+  results: { id: string; label: string; num: string; href: string; rt: string }[];
   active: number;
   setActive: (n: number | ((p: number) => number)) => void;
   jump: (href: string, id: string) => void;
@@ -73,6 +73,9 @@ function ResultsList({
             >
               <span className="chapter-num text-brass text-lg flex-shrink-0">{r.num}</span>
               <span className="display text-bone text-base flex-1 truncate">{r.label}</span>
+              {r.rt && (
+                <span className="tc text-brass/70 text-[10px] whitespace-nowrap">RT {r.rt}</span>
+              )}
               {i === active && <CornerDownLeft className="h-3.5 w-3.5 text-bone/50" />}
             </button>
           ))
@@ -178,16 +181,38 @@ export function CommandPalette() {
 
   const results = useMemo(() => {
     const query = q.trim().toLowerCase();
-    const items = navLinks.map((l, i) => ({
-      id: l.id,
-      label: t(l.label),
-      num: String(i + 1).padStart(2, "0"),
-      href: l.href,
-      idx: i,
-    }));
+    // Compute reading time for each chapter on demand (cached in a ref)
+    const items = navLinks.map((l, i) => {
+      // Estimate reading time from the section's word count
+      let rt = "";
+      const el = typeof document !== "undefined" ? document.getElementById(l.id) : null;
+      if (el) {
+        const cached = el.dataset.rt;
+        if (cached) {
+          rt = cached;
+        } else {
+          const text = el.innerText || el.textContent || "";
+          const words = text.trim().split(/\s+/).filter(Boolean).length;
+          if (words >= 40) {
+            const mins = Math.max(1, Math.round(words / 200));
+            const ss = String(Math.round((words % 200) / 200 * 60)).padStart(2, "0");
+            rt = `${String(mins).padStart(2, "0")}:${ss}`;
+            el.dataset.rt = rt;
+          }
+        }
+      }
+      return {
+        id: l.id,
+        label: t(l.label),
+        num: String(i + 1).padStart(2, "0"),
+        href: l.href,
+        idx: i,
+        rt,
+      };
+    });
     if (!query) return items;
     return items.filter((it) => it.label.toLowerCase().includes(query) || it.num.includes(query));
-  }, [q, t]);
+  }, [q, t, open]);
 
   // Reset active when results change (deferred)
   useEffect(() => {

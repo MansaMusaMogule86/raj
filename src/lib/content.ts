@@ -720,6 +720,30 @@ export const navLinks: { id: string; label: Bi; href: string }[] = [
 ];
 
 /* ------------------------------------------------------------------ */
+/* PER-SECTION OG METADATA HELPER                                     */
+/* Generates section-specific Open Graph metadata for richer social    */
+/* sharing of individual chapters. Used by the layout + share buttons.  */
+/* ------------------------------------------------------------------ */
+export function getSectionOgMeta(sectionId: string, lang: "en" | "ar" = "en") {
+  const link = navLinks.find((l) => l.id === sectionId);
+  const idx = link ? navLinks.indexOf(link) : -1;
+  const chapterNum = idx >= 0 ? String(idx + 1).padStart(2, "0") : "01";
+  const title = link
+    ? `${link.label[lang]} · ${brand.name[lang]}`
+    : `${brand.name[lang]} — Build the Body. Direct the Life.`;
+  const description = link
+    ? `${lang === "ar" ? "الفصل" : "Chapter"} ${chapterNum} — ${link.label[lang]}. ${lang === "ar" ? "إرتقِ — نظام عربي للتغيير المستدام." : "Ascend — a sustainable Arabic transformation system."}`
+    : ascend.tagline[lang];
+  return {
+    title,
+    description,
+    chapterNum,
+    ogImage: `/api/og?section=${sectionId}&lang=${lang}`,
+    url: `https://rajaidries.com/${link ? link.href.replace("#", "#") : ""}`,
+  };
+}
+
+/* ------------------------------------------------------------------ */
 /* PRIMARY CTAS                                                        */
 /* ------------------------------------------------------------------ */
 export const ctas = {
