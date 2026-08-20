@@ -164,6 +164,25 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             }),
           }}
         />
+        {/* JSON-LD: BreadcrumbList for section navigation */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "Home", item: "https://rajaidries.com/" },
+                { "@type": "ListItem", position: 2, name: "The Method", item: "https://rajaidries.com/#method" },
+                { "@type": "ListItem", position: 3, name: "Ascend Community", item: "https://rajaidries.com/#ascend" },
+                { "@type": "ListItem", position: 4, name: "Raja's Story", item: "https://rajaidries.com/#story" },
+                { "@type": "ListItem", position: 5, name: "Raja's Kit", item: "https://rajaidries.com/#kit" },
+                { "@type": "ListItem", position: 6, name: "1:1 Coaching", item: "https://rajaidries.com/#coaching" },
+                { "@type": "ListItem", position: 7, name: "Contact", item: "https://rajaidries.com/#contact" },
+              ],
+            }),
+          }}
+        />
       </head>
       <body
         className={`${oswald.variable} ${inter.variable} ${jetbrains.variable} ${alexandria.variable} antialiased bg-background text-foreground`}

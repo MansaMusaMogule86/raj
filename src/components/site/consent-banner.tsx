@@ -57,6 +57,18 @@ export function ConsentBanner() {
     }
   }, [ready, consent]);
 
+  // Allow re-opening the banner from the footer "Cookie preferences" button
+  // — sets consent back to null so the visitor can re-decide with their prefs.
+  useEffect(() => {
+    const onReopen = () => {
+      setConsent(null);
+      setShow(true);
+      setShowPrefs(true);
+    };
+    window.addEventListener("ascend:reopen-consent", onReopen);
+    return () => window.removeEventListener("ascend:reopen-consent", onReopen);
+  }, []);
+
   const decide = (c: Exclude<Consent, null>) => {
     setConsent(c);
     setShow(false);

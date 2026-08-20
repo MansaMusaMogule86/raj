@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, Globe, Mail } from "lucide-react";
+import { ArrowUpRight, Globe, Mail, Cookie } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { brand, socials, navLinks, healthDisclaimer, ascend, ctas } from "@/lib/content";
 import { Timecode, BrassRule } from "@/components/site/cinematic";
@@ -115,9 +115,23 @@ export function Footer() {
       {/* Disclaimer + legal */}
       <div className="relative mx-auto max-w-7xl px-4 md:px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-start">
         <p className="tc text-bone/40 max-w-3xl">{t(healthDisclaimer)}</p>
-        <p className="tc text-bone/40 whitespace-nowrap">
-          © {year} Raja Idries · {ar ? "إرتقِ" : "Ascend"}
-        </p>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.dispatchEvent(new CustomEvent("ascend:reopen-consent"));
+              }
+            }}
+            className="tc text-bone/40 hover:text-brass transition-colors flex items-center gap-1"
+            aria-label={ar ? "تفضيلات الكوكيز" : "Cookie preferences"}
+          >
+            <Cookie className="h-3 w-3" />
+            {ar ? "تفضيلات" : "Cookies"}
+          </button>
+          <p className="tc text-bone/40 whitespace-nowrap">
+            © {year} Raja Idries · {ar ? "إرتقِ" : "Ascend"}
+          </p>
+        </div>
       </div>
     </footer>
   );

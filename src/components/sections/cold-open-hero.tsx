@@ -150,13 +150,19 @@ export function ColdOpenHero() {
             : "A practical Arabic system for building a healthier, stronger, and more sustainable life through training, nutrition, sleep, and daily habits — without deprivation or the pressure of perfection."}
         </motion.p>
 
-        {/* CTAs */}
+        {/* CTAs — staggered entrance */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: phase >= 2 ? 1 : 0, y: phase >= 2 ? 0 : 16 }}
-          transition={{ duration: 0.7, delay: reduce ? 0 : 0.75 }}
+          initial="hidden"
+          animate={phase >= 2 ? "show" : "hidden"}
+          variants={{
+            hidden: { opacity: 0 },
+            show: { opacity: 1, transition: { staggerChildren: reduce ? 0 : 0.12, delayChildren: reduce ? 0 : 0.75 } },
+          }}
           className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3"
         >
+          <motion.div
+            variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.2, 0.7, 0.1, 1] } } }}
+          >
           <Button
             asChild
             size="lg"
@@ -171,6 +177,10 @@ export function ColdOpenHero() {
               {t(ctas.joinAscend)} <ArrowUpRight className="h-5 w-5 ms-1" />
             </a>
           </Button>
+          </motion.div>
+          <motion.div
+            variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.2, 0.7, 0.1, 1] } } }}
+          >
           <Button
             asChild
             variant="outline"
@@ -182,6 +192,10 @@ export function ColdOpenHero() {
               {t(ctas.watchStory)}
             </a>
           </Button>
+          </motion.div>
+          <motion.div
+            variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.2, 0.7, 0.1, 1] } } }}
+          >
           <Button
             asChild
             variant="ghost"
@@ -190,6 +204,7 @@ export function ColdOpenHero() {
           >
             <a href="#method">{t(ctas.exploreMethod)}</a>
           </Button>
+          </motion.div>
         </motion.div>
 
         {/* Bottom hint */}

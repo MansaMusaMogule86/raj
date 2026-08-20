@@ -2,16 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "framer-motion";
+import { useLang } from "@/lib/i18n";
+import { navLinks } from "@/lib/content";
 
 /**
  * SectionProgress — a thin vertical hairline fixed to the viewport edge that
  * fills as the visitor reads through whichever long section is currently
  * in view. Reinforces the "reading the reel" cinematic metaphor.
  *
- * Mounts a single fixed element; tracks the in-view section's own progress.
+ * Now includes a small label showing the chapter name + % read, appearing
+ * beside the progress hairline when a section is actively being read.
  */
 export function SectionProgress() {
   const reduce = useReducedMotion();
+  const { t } = useLang();
   const [sectionId, setSectionId] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   const rafRef = useRef(0);
@@ -67,24 +71,44 @@ export function SectionProgress() {
 
   if (reduce) return null;
 
+  // Look up the chapter label + number for the active section
+  const navLink = sectionId ? navLinks.find((l) => l.id === sectionId) : null;
+  const chapterNum = navLink ? String(navLinks.indexOf(navLink) + 1).padStart(2, "0") : null;
+  const chapterLabel = navLink ? t(navLink.label) : null;
+  const showLabel = sectionId && progress > 0.02;
+
   return (
     <div
-      className="fixed top-1/2 -translate-y-1/2 z-20 h-48 w-[3px] rounded-full bg-bone/10 pointer-events-none hidden lg:block overflow-hidden"
+      className="fixed top-1/2 -translate-y-1/2 z-20 hidden lg:flex flex-col items-center gap-2 pointer-events-none"
       style={{ insetInlineEnd: "0.75rem" } as React.CSSProperties}
       aria-hidden="true"
     >
-      {/* Track glow */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bone/5 to-transparent" />
-      {/* Progress fill — brass to ember */}
-      <div
-        className="absolute top-0 inset-x-0 rounded-full bg-gradient-to-b from-brass via-brass to-ember shadow-[0_0_12px_rgba(181,138,75,0.5)]"
-        style={{ height: `${progress * 100}%`, transition: "height 0.15s linear" }}
-      />
-      {/* Progress head dot */}
-      <div
-        className="absolute inset-x-0 h-1 rounded-full bg-ember"
-        style={{ top: `calc(${progress * 100}% - 2px)`, transition: "top 0.15s linear", boxShadow: "0 0 8px rgba(233,104,58,0.8)" }}
-      />
+      {/* Chapter label + % read */}
+      {showLabel && chapterLabel && (
+        <div className="flex flex-col items-center gap-0.5 mb-1">
+          <span className="tc text-brass/80 text-[9px] whitespace-nowrap rotate-180" style={{ writingMode: "vertical-rl" }}>
+            {chapterNum} · {chapterLabel}
+          </span>
+          <span className="tc text-bone/50 text-[9px] whitespace-nowrap">
+            {Math.round(progress * 100)}%
+          </span>
+        </div>
+      )}
+      {/* Progress hairline */}
+      <div className="relative h-48 w-[3px] rounded-full bg-bone/10 overflow-hidden">
+        {/* Track glow */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bone/5 to-transparent" />
+        {/* Progress fill — brass to ember */}
+        <div
+          className="absolute top-0 inset-x-0 rounded-full bg-gradient-to-b from-brass via-brass to-ember shadow-[0_0_12px_rgba(181,138,75,0.5)]"
+          style={{ height: `${progress * 100}%`, transition: "height 0.15s linear" }}
+        />
+        {/* Progress head dot */}
+        <div
+          className="absolute inset-x-0 h-1 rounded-full bg-ember"
+          style={{ top: `calc(${progress * 100}% - 2px)`, transition: "top 0.15s linear", boxShadow: "0 0 8px rgba(233,104,58,0.8)" }}
+        />
+      </div>
     </div>
   );
 }

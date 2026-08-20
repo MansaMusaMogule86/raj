@@ -575,3 +575,54 @@ Task: QA pass + mandatory enhancements (round 8)
 - Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
 - Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries)
 - Next-round candidates: bundle Arabic TTF for true AR OG, pre-generate OG images at build, animated film-leader smoother exit, consent re-open from footer, reading-progress per-section in nav, per-section canonical URLs for SEO
+
+---
+Task ID: REVIEW-09 (ninth webDevReview cron run)
+Agent: webDevReview agent (cron job 331062)
+Task: QA pass + mandatory enhancements (round 9)
+
+## Current project status (assessment)
+- v1 + REVIEW-01–08 enhancements stable: 13-section bilingual cinematic site with scroll-progress, consent (granular), director's notes, newsletter, count-up, cinematic bg, keyboard nav, share bars, dividers, command palette (focus-trap + scroll-progress + RT badges), back-to-top (return-to-last), shortcuts, section progress, theme toggle, RunTime, film-leader, print stylesheet + headers, OG images (EN+AR), no-flash i18n, nav active indicator
+- QA this round: dev server 35-925ms responses, lint clean, 0 errors, all prior features intact (RT badges 9 ✓, nav active underline 1 ✓, OG EN/AR 200 ✓)
+- No bugs found → proceeded to enhancement phase
+
+## Completed modifications this round
+
+### New features (mandatory: more features)
+1. **Consent re-open from footer** (extended `src/components/site/consent-banner.tsx` + `src/components/site/footer.tsx`)
+   - Consent banner now listens for `ascend:reopen-consent` custom event → re-shows banner with preferences panel expanded
+   - Footer gets a "Cookies" / "تفضيلات" button (Cookie icon) in the legal row that dispatches the event
+   - Lets visitors change their consent decision + granular prefs anytime, not just on first visit
+   - Verified: click footer "Cookie preferences" → banner reopens with analytics+marketing switches visible ✓
+2. **Per-section canonical URLs + BreadcrumbList JSON-LD** (`src/app/layout.tsx`)
+   - Added BreadcrumbList structured data with 7 section positions (Home → Method → Ascend → Story → Kit → Coaching → Contact) each with canonical `https://rajaidries.com/#section` URLs
+   - Richer Google search results with breadcrumb navigation
+3. **Section-progress reading label** (extended `src/components/site/section-progress.tsx`)
+   - Now shows a vertical chapter label ("03 · Ascend") + percentage read beside the progress hairline
+   - Appears only when actively reading a section (progress > 2%) and on desktop (lg)
+   - Uses `writing-mode: vertical-rl` for the chapter name to fit the narrow column
+   - Verified: label "03 · Ascend" appears when viewing the Ascend section ✓
+
+### Styling improvements (mandatory: more details)
+- **Staggered hero CTA entrance** (extended `src/components/sections/cold-open-hero.tsx`)
+  - Three hero CTAs now animate in with a staggered sequence (0.12s between each) using framer-motion variants
+  - Each CTA wrapped in a motion.div with hidden/show variants, staggered via the parent container
+  - Respects reduced-motion (instant show)
+  - Verified: 3 hero links present, staggered entrance renders correctly ✓
+- **Footer legal row**: now a flex row with the Cookies button + copyright, both brass-on-hover
+- **Section-progress label**: brass-toned vertical text + percentage, reinforcing the "reading the reel" metaphor
+
+## Verification results
+- Lint: 0 errors, 0 warnings
+- agent-browser: consent reopens from footer "Cookie preferences" button with prefs panel expanded ✓, section-progress label "03 · Ascend" appears when viewing Ascend ✓, hero CTAs present (3 links, staggered) ✓, BreadcrumbList JSON-LD in head ✓, no console errors, no regressions
+- Dev log: clean compiles
+- All prior features intact (RT badges 9, nav active underline 1, OG EN/AR 200, back-to-top, etc.)
+
+## Unresolved issues / risks + next-phase recommendations
+- OG AR cards still use Latin transliteration (Satori can't render Arabic glyphs) — documented limitation
+- 1 residual hydration warning (suppressHydrationWarning-suppressed html attr) — non-blocking
+- Newsletter + contact APIs still in-memory; swap for real ESP before production
+- Real <video> path wired but untested with actual file (awaiting Raja's footage)
+- Story frames, transformation stories, full kit, individual videos still placeholder:true — awaiting Raja's real assets
+- Still using placeholder email (contact@rajaidries.com) + placeholder booking URL (cal.com/rajaidries)
+- Next-round candidates: bundle Arabic TTF for true AR OG, pre-generate OG images at build, animated film-leader smoother exit, per-section canonical URLs as separate routes for true SEO, consent preferences summary in footer, reading-time progress bars within sections
