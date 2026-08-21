@@ -248,7 +248,7 @@ export const storyFrames: StoryFrame[] = [
 /* ------------------------------------------------------------------ */
 export type CutEntry = {
   id: string;
-  category: "training" | "nutrition" | "habits" | "mindset" | "camera" | "conversations";
+  category: "training" | "nutrition" | "habits" | "mindset" | "camera" | "conversations" | "sleep";
   title: Bi;
   excerpt: Bi;
   duration?: string;
@@ -261,12 +261,13 @@ export const cutCategories: { id: CutEntry["category"]; label: Bi }[] = [
   { id: "training", label: { en: "Training", ar: "تمرين" } },
   { id: "nutrition", label: { en: "Nutrition", ar: "تغذية" } },
   { id: "habits", label: { en: "Habits", ar: "عادات" } },
+  { id: "sleep", label: { en: "Sleep & Recovery", ar: "نوم واستشفاء" } },
   { id: "mindset", label: { en: "Mindset", ar: "ذهنية" } },
   { id: "camera", label: { en: "Behind the Camera", ar: "خلف الكاميرا" } },
   { id: "conversations", label: { en: "Conversations", ar: "حوارات" } },
 ];
 
-export const cutEntries: CutEntry[] = [
+const rawCutEntries: CutEntry[] = [
   {
     id: "c1",
     category: "habits",
@@ -346,7 +347,7 @@ export const cutEntries: CutEntry[] = [
     },
     kind: "note",
     placeholder: true,
-  } as CutEntry,
+  },
   {
     id: "c8",
     category: "training",
@@ -358,8 +359,12 @@ export const cutEntries: CutEntry[] = [
     kind: "video",
     duration: "04:48",
     placeholder: true,
-  } as CutEntry,
-].filter((e) => cutCategories.some((c) => c.id === e.category));
+  },
+];
+
+export const cutEntries: CutEntry[] = rawCutEntries.filter((e) =>
+  cutCategories.some((c) => c.id === e.category)
+);
 
 /* ------------------------------------------------------------------ */
 /* TRANSFORMATION STORIES (placeholders — Raja to provide verified)   */

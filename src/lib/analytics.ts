@@ -55,6 +55,7 @@ export function track(ev: AscendEvent) {
 
 // Convenience helpers for the most common events
 export const analytics = {
+  track,
   ascendCta: (location: string, lang: string) => track({ event: "ascend_cta_click", location, lang }),
   consultCta: (location: string, lang: string) => track({ event: "consult_cta_click", location, lang }),
   assessmentStart: (lang: string) => track({ event: "assessment_start", lang }),

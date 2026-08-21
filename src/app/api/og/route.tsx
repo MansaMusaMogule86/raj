@@ -22,7 +22,7 @@ function getNotoFont(): Buffer {
   ];
   for (const p of candidates) {
     try {
-      notoFontCache = fs.readFileSync(p);
+      notoFontCache = fs.readFileSync(/*turbopackIgnore: true*/ p);
       return notoFontCache;
     } catch {
       /* try next */
