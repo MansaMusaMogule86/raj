@@ -179,28 +179,34 @@ export function CommandPalette() {
     return () => window.clearTimeout(id);
   }, [open]);
 
-  const results = useMemo(() => {
-    const query = q.trim().toLowerCase();
-    // Compute reading time for each chapter on demand (cached in a ref)
-    const items = navLinks.map((l, i) => {
-      // Estimate reading time from the section's word count
-      let rt = "";
-      const el = typeof document !== "undefined" ? document.getElementById(l.id) : null;
-      if (el) {
-        const cached = el.dataset.rt;
-        if (cached) {
-          rt = cached;
-        } else {
+  const [readingTimes, setReadingTimes] = useState<Record<string, string>>({});
+
+  // Compute reading time for each chapter on demand when the palette opens
+  useEffect(() => {
+    if (!open) return;
+    const id = window.setTimeout(() => {
+      const times: Record<string, string> = {};
+      for (const l of navLinks) {
+        const el = document.getElementById(l.id);
+        if (el) {
           const text = el.innerText || el.textContent || "";
           const words = text.trim().split(/\s+/).filter(Boolean).length;
           if (words >= 40) {
             const mins = Math.max(1, Math.round(words / 200));
-            const ss = String(Math.round((words % 200) / 200 * 60)).padStart(2, "0");
-            rt = `${String(mins).padStart(2, "0")}:${ss}`;
-            el.dataset.rt = rt;
+            const ss = String(Math.round(((words % 200) / 200) * 60)).padStart(2, "0");
+            times[l.id] = `${String(mins).padStart(2, "0")}:${ss}`;
           }
         }
       }
+      setReadingTimes(times);
+    }, 0);
+    return () => window.clearTimeout(id);
+  }, [open]);
+
+  const results = useMemo(() => {
+    const query = q.trim().toLowerCase();
+    const items = navLinks.map((l, i) => {
+      const rt = readingTimes[l.id] || "";
       return {
         id: l.id,
         label: t(l.label),
@@ -212,7 +218,7 @@ export function CommandPalette() {
     });
     if (!query) return items;
     return items.filter((it) => it.label.toLowerCase().includes(query) || it.num.includes(query));
-  }, [q, t, open]);
+  }, [q, t, readingTimes]);
 
   // Reset active when results change (deferred)
   useEffect(() => {
