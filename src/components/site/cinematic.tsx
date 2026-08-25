@@ -76,7 +76,7 @@ export function ChapterHeader({
       </motion.div>
       <motion.h2
         variants={reveal}
-        className={`display text-bone text-4xl sm:text-5xl md:text-6xl ${lang === "ar" ? "display-ar" : ""}`}
+        className={`display text-bone text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.05] sm:leading-[1.0] ${lang === "ar" ? "display-ar" : ""}`}
       >
         {title}
       </motion.h2>

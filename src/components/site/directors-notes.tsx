@@ -61,24 +61,24 @@ export function DirectorsNotes() {
       {active && (
         <motion.aside
           key={active.sectionId}
-          initial={{ opacity: 0, y: 16, x: ar ? -20 : 20 }}
+          initial={{ opacity: 0, y: 16, x: ar ? 20 : -20 }}
           animate={{ opacity: 1, y: 0, x: 0 }}
-          exit={{ opacity: 0, y: 16, x: ar ? -20 : 20 }}
+          exit={{ opacity: 0, y: 16, x: ar ? 20 : -20 }}
           transition={{ duration: reduce ? 0 : 0.45, ease: [0.2, 0.7, 0.1, 1] }}
-          className={`hidden lg:flex fixed bottom-28 z-30 max-w-[280px] p-4 bg-obsidian/90 backdrop-blur-md border border-brass/30 rounded-sm shadow-[0_8px_40px_rgba(10,10,9,0.6)] ${
-            ar ? "left-4" : "right-4"
+          className={`hidden lg:flex flex-col fixed bottom-24 md:bottom-28 z-30 w-72 md:w-80 p-4 bg-obsidian/95 backdrop-blur-md border border-brass/30 rounded-sm shadow-[0_12px_40px_rgba(10,10,9,0.7)] ${
+            ar ? "right-6" : "left-6"
           }`}
           aria-label={ar ? "ملاحظات المخرج" : "Director's note"}
         >
           {/* Header */}
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between mb-3 border-b border-bone/10 pb-2">
             <div className="flex items-center gap-2">
               <Clapperboard className="h-3.5 w-3.5 text-brass" />
               <Timecode className="text-bone/60">{ar ? "ملاحظات المخرج" : "Director's note"}</Timecode>
             </div>
             <button
               onClick={() => setDismissed(true)}
-              className="text-bone/40 hover:text-bone transition-colors"
+              className="text-bone/40 hover:text-bone transition-colors p-1"
               aria-label={ar ? "إغلاق" : "Dismiss"}
             >
               <X className="h-3.5 w-3.5" />
@@ -87,16 +87,18 @@ export function DirectorsNotes() {
           {/* Chapter marker */}
           <div className="flex items-baseline gap-2 mb-2">
             <ChapterNumber num={active.chapter} className="text-brass text-2xl" />
-            <span className="tc text-bone/40">{ar ? `الفصل ${active.chapter}` : `Frame ${active.chapter}`}</span>
+            <span className="tc text-bone/50 text-xs">{ar ? `الفصل ${active.chapter}` : `Frame ${active.chapter}`}</span>
           </div>
           {/* Note */}
-          <p className={`text-bone/85 text-sm leading-relaxed ${ar ? "text-right" : ""}`}>
+          <p className={`text-bone/85 text-xs sm:text-sm leading-relaxed ${ar ? "text-right" : ""}`}>
             {t(active.note)}
           </p>
           {/* Footer hairline */}
-          <div className="mt-3 pt-2 border-t border-bone/10 flex items-center gap-1">
-            <span className="h-1 w-1 rounded-full bg-brass/60" />
-            <span className="tc text-bone/30">{ar ? "إرتقِ — معالجة المخرج" : "ASCEND — dir. treatment"}</span>
+          <div className="mt-3 pt-2 border-t border-bone/10 flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-brass/80" />
+              <span className="tc text-bone/40 text-[10px]">{ar ? "إرتقِ — معالجة المخرج" : "ASCEND — dir. treatment"}</span>
+            </div>
           </div>
         </motion.aside>
       )}

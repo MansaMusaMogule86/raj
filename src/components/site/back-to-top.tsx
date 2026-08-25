@@ -75,7 +75,7 @@ export function BackToTop() {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.8, y: 12 }}
           transition={{ duration: 0.3, ease: [0.2, 0.7, 0.1, 1] }}
-          className={`fixed bottom-24 md:bottom-28 z-30 flex flex-col items-center gap-2`}
+          className={`fixed bottom-16 md:bottom-28 z-30 flex flex-col items-center gap-2`}
           style={{ [ar ? "left" : "right"]: "1rem" } as React.CSSProperties}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}

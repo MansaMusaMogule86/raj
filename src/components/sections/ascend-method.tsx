@@ -13,7 +13,7 @@ const PILLAR_IMAGES: Record<string, string> = {
   training: "/images/scene-training.png",
   nutrition: "/images/scene-nutrition.png",
   sleep: "/images/scene-story.png",
-  habits: "/images/hero-portrait.png",
+  habits: "/images/raja-idries-hero-desktop.png",
 };
 
 export function AscendMethod() {

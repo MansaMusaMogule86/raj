@@ -80,7 +80,7 @@ export function ChooseNextScene() {
           }
         />
 
-        <div className="mt-12 relative min-h-[420px] p-6 sm:p-10 border border-bone/10 bg-secondary/20 frame-marker">
+        <div className="mt-8 sm:mt-12 relative min-h-[360px] sm:min-h-[420px] p-4 sm:p-8 md:p-10 border border-bone/10 bg-secondary/20 frame-marker">
           {/* Progress / timecode */}
           {started && !completed && (
             <div className="flex items-center justify-between mb-8">
@@ -197,16 +197,16 @@ export function ChooseNextScene() {
                   <label className="tc text-bone/60 block text-center">
                     {ar ? "ابعته لي — استلم ملخص الخطوة التالية" : "Send it to me — get the next-step summary"}
                   </label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Input
                       type="email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder={ar ? "بريدك الإلكتروني" : "your@email.com"}
-                      className="bg-bone/5 border-bone/20 text-bone placeholder:text-bone/40"
+                      className="bg-bone/5 border-bone/20 text-bone placeholder:text-bone/40 h-11"
                     />
-                    <Button type="submit" size="default" className="bg-brass text-obsidian hover:bg-brass/90">
+                    <Button type="submit" size="default" className="bg-brass text-obsidian hover:bg-brass/90 h-11 px-5 flex-shrink-0">
                       <Mail className="h-4 w-4 me-1" /> {ar ? "أرسل" : "Send"}
                     </Button>
                   </div>

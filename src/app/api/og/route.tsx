@@ -10,28 +10,6 @@ export const runtime = "nodejs"; // need fs to read bundled font
  * (ships with @vercel/og) for reliable Latin + basic Arabic rendering
  * without external network fetches.
  */
-import fs from "node:fs";
-import path from "node:path";
-
-let notoFontCache: Buffer | null = null;
-function getNotoFont(): Buffer {
-  if (notoFontCache) return notoFontCache;
-  const candidates = [
-    "node_modules/next/dist/compiled/@vercel/og/noto-sans-v27-latin-regular.ttf",
-    path.join(process.cwd(), "node_modules/next/dist/compiled/@vercel/og/noto-sans-v27-latin-regular.ttf"),
-  ];
-  for (const p of candidates) {
-    try {
-      notoFontCache = fs.readFileSync(/*turbopackIgnore: true*/ p);
-      return notoFontCache;
-    } catch {
-      /* try next */
-    }
-  }
-  notoFontCache = Buffer.alloc(0);
-  return notoFontCache;
-}
-
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const sectionId = url.searchParams.get("section") || "top";
@@ -63,13 +41,6 @@ export async function GET(req: Request) {
   const cta = ar ? "Join Ascend → (Irtiqi)" : "Join Ascend →";
   const priceLabel = ar ? `Ascend · $${ascend.priceUsd}/mo` : `Ascend · $${ascend.priceUsd}/mo`;
 
-  // Use the bundled Noto Sans font (reliable, no network fetch)
-  const notoFont = getNotoFont();
-  const fonts = notoFont.byteLength > 0
-    ? [{ name: "Noto Sans", data: notoFont, weight: 400 as const, style: "normal" as const }]
-    : [];
-  const fontFamily = fonts.length > 0 ? "Noto Sans" : "sans-serif";
-
   return new ImageResponse(
     (
       <div
@@ -82,7 +53,7 @@ export async function GET(req: Request) {
           padding: "64px",
           background: "linear-gradient(135deg, #0A0A09 0%, #1B1A18 100%)",
           color: "#F1EEE6",
-          fontFamily: fontFamily,
+          fontFamily: "sans-serif",
           position: "relative",
         }}
       >
@@ -123,7 +94,6 @@ export async function GET(req: Request) {
     {
       width: 1200,
       height: 630,
-      fonts,
       headers: {
         "Cache-Control": "public, max-age=86400, s-maxage=86400",
       },

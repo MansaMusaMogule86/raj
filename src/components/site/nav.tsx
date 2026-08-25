@@ -66,26 +66,26 @@ export function Nav() {
         {/* Brand */}
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="group flex items-center gap-3"
+          className="group flex items-center gap-2 sm:gap-3 flex-shrink-0"
           aria-label="Raja Idries — home"
         >
           <span className="display-condensed text-bone text-lg md:text-xl tracking-tight">RAJA</span>
           <span className="display-condensed text-brass text-lg md:text-xl tracking-tight">IDRIES</span>
-          <span className="hidden sm:inline tc text-bone/50 border-s border-bone/20 ps-3 ms-1">
+          <span className="hidden 2xl:inline tc text-bone/50 border-s border-bone/20 ps-3 ms-1 text-xs">
             {lang === "ar" ? "إرتقِ" : "ASCEND"}
           </span>
         </button>
 
         {/* Desktop links */}
-        <div className="hidden lg:flex items-center gap-6">
-          {navLinks.slice(0, 7).map((l) => {
+        <div className="hidden xl:flex items-center gap-5 2xl:gap-7 flex-shrink-0">
+          {navLinks.slice(0, 6).map((l) => {
             const isActive = activeSection === l.id;
             return (
               <button
                 key={l.id}
                 onClick={() => go(l.href, l.id)}
-                className={`relative tc transition-colors ${
-                  isActive ? "text-bone" : "text-bone/70 hover:text-bone"
+                className={`relative tc text-xs 2xl:text-sm tracking-wider uppercase whitespace-nowrap transition-colors flex-shrink-0 ${
+                  isActive ? "text-bone font-medium" : "text-bone/70 hover:text-bone"
                 }`}
               >
                 {t(l.label)}
@@ -102,7 +102,7 @@ export function Nav() {
         </div>
 
         {/* Right cluster */}
-        <div className="flex items-center gap-2 md:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
           <CommandPaletteTrigger onOpen={() => {
             // Dispatch the Cmd+K shortcut programmatically since the palette listens at window level
             window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
@@ -112,29 +112,29 @@ export function Nav() {
             variant="ghost"
             size="sm"
             onClick={() => setLang(lang === "en" ? "ar" : "en")}
-            className="text-bone/70 hover:text-bone hover:bg-bone/5 gap-2"
+            className="text-bone/70 hover:text-bone hover:bg-bone/5 gap-1.5 px-2 sm:px-3"
             aria-label="Switch language"
           >
-            <Globe className="h-4 w-4" />
-            <span className="tc">{lang === "en" ? "العربية" : "EN"}</span>
+            <Globe className="h-3.5 w-3.5" />
+            <span className="tc text-xs">{lang === "en" ? "العربية" : "EN"}</span>
           </Button>
 
           <Button
             asChild
             size="sm"
-            className="hidden sm:inline-flex bg-brass text-obsidian hover:bg-brass/90 font-medium"
+            className="hidden sm:inline-flex bg-brass text-obsidian hover:bg-brass/90 font-medium px-3.5"
             onClick={() => analytics.ascendCta("nav", lang)}
           >
             <a href={ascend.checkoutUrl} target="_blank" rel="noopener noreferrer">
               {t(ctas.joinAscend)}
-              <ArrowUpRight className="h-4 w-4 ms-1" />
+              <ArrowUpRight className="h-3.5 w-3.5 ms-1" />
             </a>
           </Button>
 
           {/* Mobile menu */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden text-bone" aria-label="Open menu">
+              <Button variant="ghost" size="icon" className="xl:hidden text-bone p-1" aria-label="Open menu">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>

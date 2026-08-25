@@ -33,6 +33,14 @@ const alexandria = Alexandria({
   display: "swap",
 });
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover" as const,
+  themeColor: "#0A0A09",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://rajaidries.com"),
   title: {
@@ -117,7 +125,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               description:
                 "Cinematographer and natural bodybuilder offering 1:1 lifestyle coaching and the Ascend Arabic transformation community.",
               url: "https://rajaidries.com",
-              image: "https://rajaidries.com/images/hero-portrait.png",
+              image: "https://rajaidries.com/images/raja-idries-hero-desktop.png",
               sameAs: [
                 "https://instagram.com/_r.a.ja",
                 "https://tiktok.com/@r.a.ja",

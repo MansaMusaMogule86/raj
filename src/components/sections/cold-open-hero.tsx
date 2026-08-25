@@ -56,7 +56,7 @@ export function ColdOpenHero() {
         transition={{ duration: 1.2 }}
       >
         <CinematicBackground
-          posterSrc="/images/hero-portrait.png"
+          posterSrc="/images/raja-idries-hero-desktop.png"
           alt={ar ? "بورتريه سينمائي لراجا إدريس" : "Cinematic portrait of Raja Idries"}
           priority
         />
@@ -68,7 +68,7 @@ export function ColdOpenHero() {
       </motion.div>
 
       {/* Top film metadata bar */}
-      <div className="absolute top-20 inset-x-0 z-10 flex items-center justify-between px-4 md:px-8 max-w-7xl mx-auto">
+      <div className="absolute top-20 md:top-24 inset-x-0 z-10 flex items-center justify-between px-4 md:px-8 max-w-7xl mx-auto pointer-events-none">
         <Timecode className="text-bone/60">REC · 24FPS · ASCEND_001</Timecode>
         <Timecode className="text-bone/60 hidden sm:inline">TC 00:00:01:00</Timecode>
       </div>
@@ -99,17 +99,16 @@ export function ColdOpenHero() {
       </AnimatePresence>
 
       {/* Main hero content */}
-      <div className="relative z-30 min-h-[100svh] flex flex-col justify-end px-4 md:px-8 pb-20 md:pb-28 max-w-7xl mx-auto">
-        {/* Identity line */}
+      <div className="relative z-30 min-h-[100svh] flex flex-col justify-end px-4 md:px-8 pb-20 md:pb-28 max-w-7xl mx-auto pt-28">
+        {/* Kicker line */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: phase >= 2 ? 1 : 0, y: phase >= 2 ? 0 : 20 }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="mb-6 flex items-center gap-3"
+          className="mb-4 flex items-center gap-2.5"
         >
-          <span className="display-condensed text-bone text-lg md:text-xl">RAJA</span>
-          <span className="display-condensed text-brass text-lg md:text-xl">IDRIES</span>
-          <span className="hidden sm:inline tc text-bone/60 border-s border-bone/20 ps-3 ms-1">
+          <span className="h-1.5 w-1.5 rounded-full bg-brass/90" />
+          <span className="tc text-brass/90 text-xs sm:text-sm tracking-wider uppercase">
             {t(brand.tagline)}
           </span>
         </motion.div>

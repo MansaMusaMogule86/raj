@@ -29,7 +29,7 @@ export function ShortcutsHint() {
       {/* Trigger */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className={`fixed bottom-24 md:bottom-28 z-30 grid place-items-center h-9 w-9 rounded-full bg-obsidian/80 backdrop-blur-md border border-bone/15 text-bone/50 hover:text-brass hover:border-brass/40 transition-colors ${
+        className={`hidden md:grid place-items-center h-9 w-9 rounded-full bg-obsidian/80 backdrop-blur-md border border-bone/15 text-bone/50 hover:text-brass hover:border-brass/40 transition-colors shadow-lg fixed bottom-28 z-30 ${
           ar ? "left-16 md:left-20" : "right-16 md:right-20"
         }`}
         aria-label={ar ? "اختصارات لوحة المفاتيح" : "Keyboard shortcuts"}
