@@ -114,7 +114,7 @@ export function ColdOpenHero() {
         </motion.div>
 
         {/* Headline — masked reveal */}
-        <h1 className={`display text-bone text-5xl sm:text-7xl md:text-8xl lg:text-9xl max-w-5xl ${ar ? "display-ar" : ""}`}>
+        <h1 className={`display text-bone text-[11vw] leading-[0.95] sm:text-7xl md:text-8xl lg:text-9xl max-w-5xl ${ar ? "display-ar" : ""}`}>
           <span className="block overflow-hidden">
             <motion.span
               className="block"
@@ -157,15 +157,16 @@ export function ColdOpenHero() {
             hidden: { opacity: 0 },
             show: { opacity: 1, transition: { staggerChildren: reduce ? 0 : 0.12, delayChildren: reduce ? 0 : 0.75 } },
           }}
-          className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4"
+          className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto"
         >
           <motion.div
             variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.2, 0.7, 0.1, 1] } } }}
+            className="w-full sm:w-auto"
           >
           <Button
             asChild
             size="lg"
-            className="bg-brass text-obsidian hover:bg-brass/90 rounded-full text-base px-7 h-12 glow-brass"
+            className="bg-brass text-obsidian hover:bg-brass/90 rounded-full text-base px-7 h-12 glow-brass w-full sm:w-auto"
           >
             <a
               href={ascend.checkoutUrl}
@@ -179,12 +180,13 @@ export function ColdOpenHero() {
           </motion.div>
           <motion.div
             variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.2, 0.7, 0.1, 1] } } }}
+            className="w-full sm:w-auto"
           >
           <Button
             asChild
             variant="outline"
             size="lg"
-            className="rounded-full border-bone/25 text-bone hover:bg-bone/5 text-base px-7 h-12"
+            className="rounded-full border-bone/25 text-bone hover:bg-bone/5 text-base px-7 h-12 w-full sm:w-auto"
           >
             <a href="#story">
               <Play className="h-4 w-4 me-2" />
@@ -194,12 +196,13 @@ export function ColdOpenHero() {
           </motion.div>
           <motion.div
             variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.2, 0.7, 0.1, 1] } } }}
+            className="w-full sm:w-auto"
           >
           <Button
             asChild
             variant="ghost"
             size="lg"
-            className="text-bone/70 hover:text-bone hover:bg-bone/5 rounded-full text-base h-12"
+            className="text-bone/70 hover:text-bone hover:bg-bone/5 rounded-full text-base h-12 w-full sm:w-auto"
           >
             <a href="#method">{t(ctas.exploreMethod)}</a>
           </Button>
