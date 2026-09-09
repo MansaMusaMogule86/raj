@@ -114,7 +114,7 @@ export function ColdOpenHero() {
         </motion.div>
 
         {/* Headline — masked reveal */}
-        <h1 className={`display text-bone text-6xl sm:text-7xl md:text-8xl lg:text-9xl max-w-5xl ${ar ? "display-ar" : ""}`}>
+        <h1 className={`display text-bone text-5xl sm:text-7xl md:text-8xl lg:text-9xl max-w-5xl ${ar ? "display-ar" : ""}`}>
           <span className="block overflow-hidden">
             <motion.span
               className="block"
@@ -157,7 +157,7 @@ export function ColdOpenHero() {
             hidden: { opacity: 0 },
             show: { opacity: 1, transition: { staggerChildren: reduce ? 0 : 0.12, delayChildren: reduce ? 0 : 0.75 } },
           }}
-          className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3"
+          className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4"
         >
           <motion.div
             variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.2, 0.7, 0.1, 1] } } }}
