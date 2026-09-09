@@ -66,7 +66,7 @@ export function CinematicBackground({
       <img
         src={posterSrc}
         alt={alt}
-        className="h-full w-full object-cover object-center"
+        className="h-full w-full object-cover object-[65%_top] md:object-center"
         fetchPriority={priority ? "high" : "auto"}
       />
 
@@ -74,7 +74,7 @@ export function CinematicBackground({
       {videoSrc && !reduce && inView && (
         <video
           ref={videoRef}
-          className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-1000 ${
+          className={`absolute inset-0 h-full w-full object-cover object-[65%_top] md:object-center transition-opacity duration-1000 ${
             videoLoaded ? "opacity-100" : "opacity-0"
           }`}
           src={videoSrc}

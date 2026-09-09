@@ -45,7 +45,7 @@ export function ColdOpenHero() {
   return (
     <section
       id="top"
-      className="relative min-h-[100svh] w-full overflow-hidden bg-obsidian"
+      className="relative min-h-[100svh] w-full overflow-hidden bg-obsidian pb-[env(safe-area-inset-bottom)]"
       aria-label="Cold open"
     >
       {/* Background: ambient cinematic layer with poster fallback (lazy video slot reserved) */}
@@ -61,14 +61,14 @@ export function ColdOpenHero() {
           priority
         />
         {/* Cinematic gradients + vignette */}
-        <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/30 to-obsidian/60" />
-        <div className="absolute inset-0 bg-gradient-to-r from-obsidian/70 via-transparent to-obsidian/40 rtl:bg-gradient-to-l" />
+        <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-obsidian/40 sm:via-obsidian/30 to-obsidian/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-obsidian/90 sm:from-obsidian/70 via-transparent to-obsidian/40 rtl:bg-gradient-to-l" />
         <div className="vignette" />
         <div className="light-leak" />
       </motion.div>
 
       {/* Top film metadata bar */}
-      <div className="absolute top-20 md:top-24 inset-x-0 z-10 flex items-center justify-between px-4 md:px-8 max-w-7xl mx-auto pointer-events-none">
+      <div className="absolute top-[calc(env(safe-area-inset-top)+5rem)] md:top-24 inset-x-0 z-10 flex items-center justify-between px-5 md:px-8 max-w-7xl mx-auto pointer-events-none">
         <Timecode className="text-bone/60">REC · 24FPS · ASCEND_001</Timecode>
         <Timecode className="text-bone/60 hidden sm:inline">TC 00:00:01:00</Timecode>
       </div>
@@ -99,7 +99,7 @@ export function ColdOpenHero() {
       </AnimatePresence>
 
       {/* Main hero content */}
-      <div className="relative z-30 min-h-[100svh] flex flex-col justify-end px-4 md:px-8 pb-20 md:pb-28 max-w-7xl mx-auto pt-28">
+      <div className="relative z-30 min-h-[100svh] flex flex-col justify-end px-5 md:px-8 pb-10 sm:pb-20 md:pb-28 max-w-7xl mx-auto pt-32 sm:pt-28">
         {/* Kicker line */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -114,7 +114,7 @@ export function ColdOpenHero() {
         </motion.div>
 
         {/* Headline — masked reveal */}
-        <h1 className={`display text-bone text-[11vw] leading-[0.95] sm:text-7xl md:text-8xl lg:text-9xl max-w-5xl ${ar ? "display-ar" : ""}`}>
+        <h1 className={`display text-bone text-[clamp(2.5rem,10vw,4.5rem)] leading-[0.95] sm:text-7xl md:text-8xl lg:text-9xl max-w-[340px] sm:max-w-5xl ${ar ? "display-ar" : ""}`}>
           <span className="block overflow-hidden">
             <motion.span
               className="block"
@@ -142,7 +142,7 @@ export function ColdOpenHero() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: phase >= 2 ? 1 : 0, y: phase >= 2 ? 0 : 16 }}
           transition={{ duration: 0.7, delay: reduce ? 0 : 0.55 }}
-          className={`mt-6 max-w-2xl text-bone/75 text-base sm:text-lg leading-relaxed ${ar ? "text-right" : ""}`}
+          className={`mt-4 sm:mt-6 max-w-2xl text-bone/80 text-sm sm:text-lg leading-relaxed ${ar ? "text-right" : ""}`}
         >
           {ar
             ? "نظام عربي عملي لبناء حياة أصح وأقوى وأكثر استدامة، عبر التمرين والتغذية والنوم والعادات اليومية — بدون حرمان أو ضغط المثالية."
@@ -155,9 +155,9 @@ export function ColdOpenHero() {
           animate={phase >= 2 ? "show" : "hidden"}
           variants={{
             hidden: { opacity: 0 },
-            show: { opacity: 1, transition: { staggerChildren: reduce ? 0 : 0.12, delayChildren: reduce ? 0 : 0.75 } },
+            show: { opacity: 1, transition: { staggerChildren: reduce ? 0 : 0.08, delayChildren: reduce ? 0 : 0.75 } },
           }}
-          className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto"
+          className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full sm:w-auto"
         >
           <motion.div
             variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.2, 0.7, 0.1, 1] } } }}
@@ -166,7 +166,7 @@ export function ColdOpenHero() {
           <Button
             asChild
             size="lg"
-            className="bg-brass text-obsidian hover:bg-brass/90 rounded-full text-base px-7 h-12 glow-brass w-full sm:w-auto"
+            className="bg-brass text-obsidian hover:bg-brass/90 rounded-full text-base sm:px-7 h-14 sm:h-12 glow-brass w-full sm:w-auto"
           >
             <a
               href={ascend.checkoutUrl}
@@ -186,7 +186,7 @@ export function ColdOpenHero() {
             asChild
             variant="outline"
             size="lg"
-            className="rounded-full border-bone/25 text-bone hover:bg-bone/5 text-base px-7 h-12 w-full sm:w-auto"
+            className="rounded-full border-bone/25 text-bone hover:bg-bone/5 text-base sm:px-7 h-14 sm:h-12 w-full sm:w-auto"
           >
             <a href="#story">
               <Play className="h-4 w-4 me-2" />
@@ -202,7 +202,7 @@ export function ColdOpenHero() {
             asChild
             variant="ghost"
             size="lg"
-            className="text-bone/70 hover:text-bone hover:bg-bone/5 rounded-full text-base h-12 w-full sm:w-auto"
+            className="text-bone/70 hover:text-bone hover:bg-bone/5 rounded-full text-sm sm:text-base h-12 sm:h-12 w-full sm:w-auto mt-1 sm:mt-0"
           >
             <a href="#method">{t(ctas.exploreMethod)}</a>
           </Button>
@@ -214,7 +214,7 @@ export function ColdOpenHero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: phase >= 2 ? 1 : 0 }}
           transition={{ duration: 0.7, delay: reduce ? 0 : 1.1 }}
-          className="mt-10 flex items-center justify-between"
+          className="mt-8 sm:mt-10 flex items-center justify-between"
         >
           <span className="tc text-bone/40">
             {ar ? "اضغط الفصول بالأعلى للتنقّل" : "Scroll for the chapters"}

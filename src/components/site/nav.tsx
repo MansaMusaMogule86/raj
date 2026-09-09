@@ -58,11 +58,11 @@ export function Nav() {
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-colors duration-500 ${
+      className={`fixed top-0 inset-x-0 z-50 transition-colors duration-500 pt-[env(safe-area-inset-top)] ${
         scrolled ? "bg-obsidian/85 backdrop-blur-md border-b border-bone/10" : "bg-transparent"
       }`}
     >
-      <nav className="mx-auto flex h-16 md:h-20 max-w-7xl items-center justify-between px-4 md:px-8">
+      <nav className="mx-auto flex h-14 md:h-20 max-w-7xl items-center justify-between px-5 md:px-8">
         {/* Brand */}
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -102,7 +102,7 @@ export function Nav() {
         </div>
 
         {/* Right cluster */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
+        <div className="flex items-center gap-1 sm:gap-2.5 flex-shrink-0">
           <CommandPaletteTrigger onOpen={() => {
             // Dispatch the Cmd+K shortcut programmatically since the palette listens at window level
             window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true }));
@@ -112,11 +112,11 @@ export function Nav() {
             variant="ghost"
             size="sm"
             onClick={() => setLang(lang === "en" ? "ar" : "en")}
-            className="text-bone/70 hover:text-bone hover:bg-bone/5 gap-1.5 px-2 sm:px-3"
+            className="text-bone/70 hover:text-bone hover:bg-bone/5 gap-1.5 px-2 sm:px-3 h-8 sm:h-9"
             aria-label="Switch language"
           >
-            <Globe className="h-3.5 w-3.5" />
-            <span className="tc text-xs">{lang === "en" ? "العربية" : "EN"}</span>
+            <Globe className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
+            <span className="tc text-xs hidden sm:inline">{lang === "en" ? "العربية" : "EN"}</span>
           </Button>
 
           <Button
@@ -134,7 +134,7 @@ export function Nav() {
           {/* Mobile menu */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="xl:hidden text-bone p-1" aria-label="Open menu">
+              <Button variant="ghost" size="icon" className="xl:hidden text-bone p-1 h-8 w-8 sm:h-9 sm:w-9" aria-label="Open menu">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
